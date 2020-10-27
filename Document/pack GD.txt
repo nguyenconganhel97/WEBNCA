@@ -1,0 +1,314 @@
+SELECT * FROM "SEARCH" s
+WHERE searchcode like '%2246%';
+
+SELECT * FROM FLDMASTER f2;
+
+SELECT modcode, fldname, objname, defname, caption, en_caption, odrnum, fldtype, fldmask, fldformat, fldlen, fldwidth, llist, lchk, defval, visible, NULL "disable", mandatory, amtexp, validtag, lookup, NULL "datatype", invname, fldsource, flddesc, chainname, printinfo, lookupname, searchcode, srmodcode, invformat, ctltype, riskfld, grname, tagfield, tagvalue, taglist, tagquery, pdefname, tagupdate, fldrnd, subfield, pdefval, defdesc, defparam, NULL lock_key
+FROM fldmaster WHERE objname = '2230';
+
+
+
+
+SELECT --FN_GET_LOCATION(CFMAST.BRID) LOCATION, 
+SEDEPOSIT.TXDATE TXDATE,A4.CDCONTENT TRADEPLACE ,SEMAST.ACTYPE, SUBSTR(SEMAST.ACCTNO,1,4) || '.' || SUBSTR(SEMAST.ACCTNO,5,6) || '.' || SUBSTR(SEMAST.ACCTNO,11,6) ACCTNO, SYM.SYMBOL, SYM.PARVALUE, SEMAST.CODEID, SUBSTR(AFACCTNO,1,4) || '.' || SUBSTR(AFACCTNO,5,6) AFACCTNO,SUBSTR(CUSTODYCD,1,4) || '.' || SUBSTR(CUSTODYCD,5,6) CUSTODYCD, SEMAST.OPNDATE, SEMAST.CLSDATE, SEMAST.LASTDATE,
+A1.CDCONTENT STATUS, SEMAST.PSTATUS, A2.CDCONTENT IRTIED, A3.CDCONTENT ICCFTIED, IRCD, COSTPRICE,SEDEPOSIT.DEPOSITQTTY DEPOSIT,SEDEPOSIT.depotrade,SEDEPOSIT.depoblock,SEDEPOSIT.typedepoblock ,SEDEPOSIT.DEPOSITPRICE DEPOSITPRICE,SEDEPOSIT.AUTOID AUTOID,SEDEPOSIT.DESCRIPTION DESCRIPTION, SEDEPOSIT.TXDATE PDATE,SEMAST.CUSTID CUSTID, COSTDT,CFMAST.FULLNAME CUSTNAME,CFMAST.ADDRESS  ADDRESS, cfmast.idcode LICENSE,
+BR.brid brname, null tlfullname, ISSU.fullname ISSFULLNAME
+FROM SEMAST,CFMAST,SBSECURITIES SYM,
+(SELECT * FROM SEDEPOSIT WHERE STATUS='D' AND DELTD <> 'Y') SEDEPOSIT, ALLCODE A1, ALLCODE A2, ALLCODE A3,ALLCODE A4,
+brgrp BR, ISSUERS ISSU
+WHERE SEMAST.DEPOSIT>0 AND A1.CDTYPE = 'SE' AND A1.CDNAME = 'STATUS' AND A1.CDVAL = SEMAST.STATUS
+--AND BR.brid = '<$BRID>'
+AND SYM.ISSUERID = ISSU.ISSUERID(+)
+AND A2.CDTYPE = 'SY' AND A2.CDNAME = 'YESNO' AND A2.CDVAL = IRTIED
+AND SYM.CODEID = SEMAST.CODEID
+AND A3.CDTYPE = 'SY' AND A3.CDNAME = 'YESNO' AND A3.CDVAL = SEMAST.ICCFTIED
+AND A4.CDTYPE = 'SE' AND A4.CDNAME = 'TRADEPLACE'  AND A4.CDVAL = SYM.TRADEPLACE
+AND CFMAST.CUSTID = SEMAST.CUSTID
+AND SEDEPOSIT.ACCTNO = SEMAST.ACCTNO 
+AND SYM.SYMBOL  = 'A71'
+
+
+SELECT * FROM ALLCODE a WHERE  a.CDTYPE = 'SY' AND a.CDNAME = 'YESNO';
+
+SELECT ICCFTIED FROM SEMAST s 
+
+
+SELECT * FROM SEDEPOSIT s WHERE ACCTNO = '0001000157000208'
+
+SELECT * FROM SEMAST s WHERE ACCTNO ='0001000157000208'
+
+
+
+SELECT acctno, afacctno, null, null, codeid, null, trade, null, null, null, costprice, receiving, null, netting, status, null, pstatus, null, null, secured, null, null, null, null, senddeposit, deposit
+FROM semast WHERE ACCTNO ='0001000157000208'
+
+SELECT * FROM SEMAST s2 ;
+
+
+
+
+SELECT autoid, acctno, txnum, txdate, depositprice, depositqtty, status, deltd, description, depotrade, depoblock, typedepoblock, rdate, wtrade, pstatus, depodate, senddepodate, vsdcode, isconfirm
+FROM sedeposit WHERE ACCTNO  = '0001000157000208'
+
+
+select "ACTYPE",s.* from semast s 
+
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT  SEDEPOSIT.DEPODATE TXDATE,A4.CDCONTENT TRADEPLACE ,SEMAST.ACTYPE,
+        SUBSTR(SEMAST.ACCTNO,1,4) || '.' || SUBSTR(SEMAST.ACCTNO,5,6) || '.' || SUBSTR(SEMAST.ACCTNO,11,6) ACCTNO,
+        SYM.SYMBOL, SYM.PARVALUE, SEMAST.CODEID, SUBSTR(SEMAST.AFACCTNO,1,4) || '.' || SUBSTR(SEMAST.AFACCTNO,5,6) AFACCTNO,
+        SUBSTR(CUSTODYCD,1,4) || '.' || SUBSTR(CUSTODYCD,5,6) CUSTODYCD, SEMAST.OPNDATE, SEMAST.CLSDATE, SEMAST.LASTDATE,
+        A1.CDCONTENT STATUS, SEMAST.PSTATUS, A2.CDCONTENT IRTIED, A3.CDCONTENT ICCFTIED, IRCD, COSTPRICE,
+        SEDEPOSIT.DEPOSITQTTY DEPOSIT,SEDEPOSIT.DEPOSITPRICE DEPOSITPRICE,SEDEPOSIT.AUTOID AUTOID,
+        SEDEPOSIT.DESCRIPTION DESCRIPTION,SEDEPOSIT.DEPODATE PDATE,SEMAST.CUSTID CUSTID, COSTDT,
+        CFMAST.FULLNAME CUSTNAME,CFMAST.ADDRESS  ADDRESS,(CASE WHEN SUBSTR( CFMAST.CUSTODYCD,4,1)='F' THEN CFMAST.tradingcode ELSE CFMAST.IDCODE END )  LICENSE,
+         DEPOTRADE,DEPOBLOCK,SEDEPOSIT.WTRADE,A5.CDCONTENT  QTTYTYPE,RDATE,CFMAST.IDTYPE,   (CASE WHEN SUBSTR( CFMAST.CUSTODYCD,4,1)='F' THEN CFMAST.tradingcodedt ELSE CFMAST.IDDATE END )IDDATE,
+ISSUERS.FULLNAME  NAMESYMBOL,SEDEPOSIT.VSDCODE,SEDEPOSIT.DESCRIPTION REFERENCEID
+FROM SEMAST,CFMAST,SBSECURITIES SYM,ISSUERS, SBSECURITIES SYM2,
+     (SELECT * FROM SEDEPOSIT WHERE STATUS='D' AND DELTD <> 'Y') SEDEPOSIT,
+     ALLCODE A1, ALLCODE A2, ALLCODE A3,ALLCODE A4,ALLCODE A5
+WHERE SEMAST.DEPOSIT>0 AND A1.CDTYPE = 'SE' AND A1.CDNAME = 'STATUS' AND A1.CDVAL = SEMAST.STATUS
+AND A2.CDTYPE = 'SY' AND A2.CDNAME = 'YESNO'  AND A2.CDVAL = IRTIED AND ISSUERS.ISSUERID = SYM.ISSUERID
+AND NVL(A5.CDTYPE,'SE')  = 'SE' AND NVL(A5.CDNAME,'QTTYTYPE') = 'QTTYTYPE' AND  SEDEPOSIT.TYPEDEPOBLOCK=A5.CDVAL (+)
+AND SYM.CODEID = SEMAST.CODEID
+and sym.refcodeid = sym2.codeid(+)
+AND A3.CDTYPE = 'SY' AND A3.CDNAME = 'YESNO'  AND A3.CDVAL = SEMAST.ICCFTIED
+AND A4.CDTYPE = 'SE' AND A4.CDNAME = 'TRADEPLACE'
+AND A4.CDVAL = (case when sym.refcodeid is null then SYM.TRADEPLACE else SYM2.TRADEPLACE end)
+AND CFMAST.CUSTID = SEMAST.CUSTID
+AND SEDEPOSIT.ACCTNO=SEMAST.ACCTNO
+
+
+SELECT modcode, fldname, objname, defname, caption, en_caption, odrnum, fldtype, fldmask, fldformat, fldlen, fldwidth, llist, lchk, defval, visible, NULL "disable", mandatory, amtexp, validtag, lookup, NULL "datatype", invname, fldsource, flddesc, chainname, printinfo, lookupname, searchcode, srmodcode, invformat, ctltype, riskfld, grname, tagfield, tagvalue, taglist, tagquery, pdefname, tagupdate, fldrnd, subfield, pdefval, defdesc, defparam, NULL lock_key
+FROM fldmaster WHERE objname = '2241';
+
+
+
+
+
+SELECT modcode, fldname, objname, defname, caption, en_caption, odrnum, fldtype, fldmask, fldformat, fldlen, fldwidth, llist, lchk, defval, visible, NULL "disable", mandatory, amtexp, validtag, lookup, FLDTYPE "datatype", invname, fldsource, flddesc, chainname, printinfo, lookupname, searchcode, srmodcode, invformat, ctltype, riskfld, grname, tagfield, tagvalue, taglist, tagquery, pdefname, tagupdate, fldrnd, subfield, pdefval, defdesc, defparam, NULL lock_key
+FROM fldmaster WHERE objname = '2246';
+
+
+select * from tltx where tltxcd = '2246'
+
+select * from tltx as t where tltxcd = '2231'
+
+
+
+SELECT DISTINCT FN_GET_LOCATION(CFMAST.BRID) LOCATION, SEDEPOSIT.Senddepodate TXDATE, to_char(SEDEPOSIT.Senddepodate,'YYYY/MM/DD') TXDATE1,
+A4.CDCONTENT TRADEPLACE, SEMAST.ACTYPE,
+                SUBSTR(SEMAST.ACCTNO, 1, 4) || '.' ||
+                 SUBSTR(SEMAST.ACCTNO, 5, 6) || '.' ||
+                 SUBSTR(SEMAST.ACCTNO, 11, 6) ACCTNO, SYM.SYMBOL,
+                SYM.PARVALUE, SEMAST.CODEID,
+                SUBSTR(SEMAST.AFACCTNO, 1, 4) || '.' ||
+                 SUBSTR(SEMAST.AFACCTNO, 5, 6) AFACCTNO,
+                SUBSTR(CFMAST.CUSTODYCD, 1, 4) || '.' || SUBSTR(CFMAST.CUSTODYCD, 5, 6) CUSTODYCD,
+                SEMAST.OPNDATE, SEMAST.CLSDATE, SEMAST.LASTDATE,
+                A1.CDCONTENT STATUS, SEMAST.PSTATUS, A2.CDCONTENT IRTIED,
+                A3.CDCONTENT ICCFTIED, IRCD, COSTPRICE,
+                SEDEPOSIT.DEPOSITQTTY SENDDEPOSIT,
+                SEDEPOSIT.DEPOSITPRICE DEPOSITPRICE,
+                SEDEPOSIT.DESCRIPTION DESCRIPTION, SEDEPOSIT.AUTOID AUTOID,
+                CFMAST.CUSTID, COSTDT, SEDEPOSIT.Senddepodate PDATE, SEDEPOSIT.RDATE,
+                CFMAST.FULLNAME, CFMAST.ADDRESS, CFMAST.IDCODE, DEPOTRADE,
+                DEPOBLOCK, A5.CDCONTENT CD_QTTYTYPE,
+                SEDEPOSIT.TYPEDEPOBLOCK QTTYTYPE, SEDEPOSIT.WTRADE WTRADE,
+                NVL(CI.DEPOLASTDT, getcurrdate) DEPOLASTDT,SEDEPOSIT.VSDCODE
+  FROM SEMAST, CFMAST, SBSECURITIES SYM,DDMAST CI,
+       (SELECT *
+           FROM SEDEPOSIT
+          WHERE STATUS = 'S'
+            AND DELTD <> 'Y') SEDEPOSIT, ALLCODE A1, ALLCODE A2, ALLCODE A3,
+       ALLCODE A4, ALLCODE A5
+ WHERE SEMAST.SENDDEPOSIT > 0
+   AND A1.CDTYPE = 'SE'
+   AND A1.CDNAME = 'STATUS'
+   AND A1.CDVAL = SEMAST.STATUS
+   AND SEMAST.CUSTID = CFMAST.CUSTID
+   and SEMAST.AFACCTNO = CI.AFACCTNO (+)
+   and ci.custodycd = CFMAST.custodycd
+   and ci.isdefault = 'Y' and ci.status <> 'C'
+   AND A2.CDTYPE = 'SY'
+   AND A2.CDNAME = 'YESNO'
+   AND A2.CDVAL = IRTIED
+   AND nvl(A5.CDTYPE, 'SE') = 'SE'
+   AND NVL(A5.CDNAME, 'QTTYTYPE') = 'QTTYTYPE'
+   AND SEDEPOSIT.TYPEDEPOBLOCK = A5.CDVAL(+)
+   AND SYM.CODEID = SEMAST.CODEID
+   AND A3.CDTYPE = 'SY'
+   AND A3.CDNAME = 'YESNO'
+   AND A3.CDVAL = SEMAST.ICCFTIED
+   AND A4.CDTYPE = 'SE'
+   AND A4.CDNAME = 'TRADEPLACE'
+   AND A4.CDVAL = SYM.TRADEPLACE
+   AND SEDEPOSIT.ACCTNO = SEMAST.ACCTNO
+   
+   
+   
+   
+
+   
+   
+SELECT modcode, fldname, objname, defname, caption, en_caption, odrnum, fldtype, fldmask, fldformat, fldlen, fldwidth, llist, lchk, defval, visible, NULL "disable", mandatory, amtexp, validtag, lookup, FLDTYPE "datatype", invname, fldsource, flddesc, chainname, printinfo, lookupname, searchcode, srmodcode, invformat, ctltype, riskfld, grname, tagfield, tagvalue, taglist, tagquery, pdefname, tagupdate, fldrnd, subfield, pdefval, defdesc, defparam, NULL lock_key
+FROM fldmaster WHERE objname = '2293';
+
+
+
+
+
+select * from tltx  where tltxcd = '2293'
+
+
+
+   
+SELECT modcode, fldname, objname, defname, caption, en_caption, odrnum, fldtype, fldmask, fldformat, fldlen, fldwidth, llist, lchk, defval, visible, NULL "disable", mandatory, amtexp, validtag, lookup, FLDTYPE "datatype", invname, fldsource, flddesc, chainname, printinfo, lookupname, searchcode, srmodcode, invformat, ctltype, riskfld, grname, tagfield, tagvalue, taglist, tagquery, pdefname, tagupdate, fldrnd, subfield, pdefval, defdesc, defparam, NULL lock_key
+FROM fldmaster WHERE objname = '2294';
+
+
+select * from tltx  where tltxcd = '2294'
+
+
+SELECT modcode, fldname, objname, defname, caption, en_caption, odrnum, fldtype, fldmask, fldformat, fldlen, fldwidth, llist, lchk, defval, visible, NULL "disable", mandatory, amtexp, validtag, lookup, FLDTYPE "datatype", invname, fldsource, flddesc, chainname, printinfo, lookupname, searchcode, srmodcode, invformat, ctltype, riskfld, grname, tagfield, tagvalue, taglist, tagquery, pdefname, tagupdate, fldrnd, subfield, pdefval, defdesc, defparam, NULL lock_key
+FROM fldmaster WHERE objname = '2254';
+
+select * from tltx  where tltxcd = '2254'
+
+
+
+SELECT * FROM "SEARCH" s
+WHERE searchcode like '%2254%';
+
+
+
+
+
+SELECT SEO.*, CF.FULLNAME,CF.CUSTODYCD,AF.ACCTNO AFACCTNO,
+  SEC.SYMBOL, SE.COSTPRICE,SEO.fee+SEO.tax+SEO.feesv amt
+  FROM SESENDOUT SEO, CFMAST CF, AFMAST AF, SBSECURITIES SEC,SEMAST SE
+  WHERE SUBSTR(SEO.ACCTNO,0,10)=AF.ACCTNO
+  AND AF.CUSTID=CF.CUSTID
+  AND SEC.CODEID=SEO.CODEID
+  AND SE.ACCTNO=SEO.ACCTNO
+  and seo.trade+seo.blocked+seo.caqtty>0
+  and deltd='N'
+   
+
+
+
+
+
+INSERT INTO FLDMASTER
+(MODCODE, FLDNAME, OBJNAME, DEFNAME, CAPTION, EN_CAPTION, ODRNUM, FLDTYPE, FLDMASK, FLDFORMAT, FLDLEN, FLDWIDTH, LLIST, LCHK, DEFVAL, VISIBLE, "disable", MANDATORY, AMTEXP, VALIDTAG, LOOKUP, "datatype", INVNAME, FLDSOURCE, FLDDESC, CHAINNAME, PRINTINFO, LOOKUPNAME, SEARCHCODE, SRMODCODE, INVFORMAT, CTLTYPE, RISKFLD, GRNAME, TAGFIELD, TAGVALUE, TAGLIST, TAGQUERY, PDEFNAME, TAGUPDATE, FLDRND, SUBFIELD, PDEFVAL, DEFDESC, DEFPARAM, LOCK_KEY)
+VALUES('SE', '01', '2254', 'CODEID', 'Mã chứng khoán', 'Symbol', 60, 'C', '999999', '999999', 6, 6, NULL, ' ', ' ', 'N', NULL, 'Y', ' ', ' ', 'Y', 'C', NULL, NULL, NULL, 'CODEID', '##########', NULL, NULL, NULL, NULL, 'T', 'N', 'MAIN', NULL, NULL, NULL, 'N', NULL, 'Y', NULL, 'N', NULL, NULL, NULL, NULL);
+INSERT INTO FLDMASTER
+(MODCODE, FLDNAME, OBJNAME, DEFNAME, CAPTION, EN_CAPTION, ODRNUM, FLDTYPE, FLDMASK, FLDFORMAT, FLDLEN, FLDWIDTH, LLIST, LCHK, DEFVAL, VISIBLE, "disable", MANDATORY, AMTEXP, VALIDTAG, LOOKUP, "datatype", INVNAME, FLDSOURCE, FLDDESC, CHAINNAME, PRINTINFO, LOOKUPNAME, SEARCHCODE, SRMODCODE, INVFORMAT, CTLTYPE, RISKFLD, GRNAME, TAGFIELD, TAGVALUE, TAGLIST, TAGQUERY, PDEFNAME, TAGUPDATE, FLDRND, SUBFIELD, PDEFVAL, DEFDESC, DEFPARAM, LOCK_KEY)
+VALUES('SE', '02', '2254', 'AFACCTNO', 'Số TK ghi Nợ', 'Debit contract', 3, 'C', '9999.999999', '9999.999999', 10, 10, ' ', 'Y', ' ', 'Y', NULL, 'Y', ' ', ' ', 'N', 'C', NULL, NULL, NULL, 'AFACCTNO', '##########', NULL, NULL, 'CF', NULL, 'M', 'N', 'MAIN', NULL, NULL, NULL, 'N', NULL, 'Y', NULL, 'N', NULL, NULL, NULL, NULL);
+INSERT INTO FLDMASTER
+(MODCODE, FLDNAME, OBJNAME, DEFNAME, CAPTION, EN_CAPTION, ODRNUM, FLDTYPE, FLDMASK, FLDFORMAT, FLDLEN, FLDWIDTH, LLIST, LCHK, DEFVAL, VISIBLE, "disable", MANDATORY, AMTEXP, VALIDTAG, LOOKUP, "datatype", INVNAME, FLDSOURCE, FLDDESC, CHAINNAME, PRINTINFO, LOOKUPNAME, SEARCHCODE, SRMODCODE, INVFORMAT, CTLTYPE, RISKFLD, GRNAME, TAGFIELD, TAGVALUE, TAGLIST, TAGQUERY, PDEFNAME, TAGUPDATE, FLDRND, SUBFIELD, PDEFVAL, DEFDESC, DEFPARAM, LOCK_KEY)
+VALUES('SE', '03', '2254', 'ACCTNO', 'Số TK CK ghi Nợ', 'Debit stock Account No', 4, 'C', '9999.999999.999999', '9999.999999.999999', 16, 16, ' ', ' ', ' ', 'Y', NULL, 'Y', ' ', ' ', 'N', 'C', NULL, NULL, NULL, 'ACCTNO', '##########', NULL, NULL, NULL, NULL, 'M', 'N', 'MAIN', NULL, NULL, NULL, 'N', 'P_ACCTNO', 'Y', NULL, 'N', NULL, NULL, NULL, NULL);
+INSERT INTO FLDMASTER
+(MODCODE, FLDNAME, OBJNAME, DEFNAME, CAPTION, EN_CAPTION, ODRNUM, FLDTYPE, FLDMASK, FLDFORMAT, FLDLEN, FLDWIDTH, LLIST, LCHK, DEFVAL, VISIBLE, "disable", MANDATORY, AMTEXP, VALIDTAG, LOOKUP, "datatype", INVNAME, FLDSOURCE, FLDDESC, CHAINNAME, PRINTINFO, LOOKUPNAME, SEARCHCODE, SRMODCODE, INVFORMAT, CTLTYPE, RISKFLD, GRNAME, TAGFIELD, TAGVALUE, TAGLIST, TAGQUERY, PDEFNAME, TAGUPDATE, FLDRND, SUBFIELD, PDEFVAL, DEFDESC, DEFPARAM, LOCK_KEY)
+VALUES('SE', '05', '2254', 'CUSTODYCD', 'Số LK', 'Custodycd', 2, 'C', 'ccc.c.cccccc', 'ccc.c.cccccc', 10, 10, ' ', 'Y', ' ', 'Y', NULL, 'Y', ' ', ' ', 'N', 'C', NULL, NULL, NULL, NULL, '##########', NULL, NULL, NULL, NULL, 'M', 'N', 'MAIN', NULL, NULL, NULL, 'N', NULL, 'Y', NULL, 'N', NULL, NULL, NULL, NULL);
+INSERT INTO FLDMASTER
+(MODCODE, FLDNAME, OBJNAME, DEFNAME, CAPTION, EN_CAPTION, ODRNUM, FLDTYPE, FLDMASK, FLDFORMAT, FLDLEN, FLDWIDTH, LLIST, LCHK, DEFVAL, VISIBLE, "disable", MANDATORY, AMTEXP, VALIDTAG, LOOKUP, "datatype", INVNAME, FLDSOURCE, FLDDESC, CHAINNAME, PRINTINFO, LOOKUPNAME, SEARCHCODE, SRMODCODE, INVFORMAT, CTLTYPE, RISKFLD, GRNAME, TAGFIELD, TAGVALUE, TAGLIST, TAGQUERY, PDEFNAME, TAGUPDATE, FLDRND, SUBFIELD, PDEFVAL, DEFDESC, DEFPARAM, LOCK_KEY)
+VALUES('SE', '06', '2254', 'BLOCKED', 'Số lượng CK phong tỏa', 'Blocked quantity', 10, 'N', '#,##0', '#,##0', 16, 16, ' ', ' ', '0', 'Y', NULL, 'Y', ' ', ' ', 'N', 'N', NULL, NULL, NULL, NULL, '##########', NULL, NULL, NULL, NULL, 'T', 'N', 'MAIN', NULL, NULL, NULL, 'N', 'P_QTTY', 'Y', '0', 'N', NULL, NULL, NULL, NULL);
+INSERT INTO FLDMASTER
+(MODCODE, FLDNAME, OBJNAME, DEFNAME, CAPTION, EN_CAPTION, ODRNUM, FLDTYPE, FLDMASK, FLDFORMAT, FLDLEN, FLDWIDTH, LLIST, LCHK, DEFVAL, VISIBLE, "disable", MANDATORY, AMTEXP, VALIDTAG, LOOKUP, "datatype", INVNAME, FLDSOURCE, FLDDESC, CHAINNAME, PRINTINFO, LOOKUPNAME, SEARCHCODE, SRMODCODE, INVFORMAT, CTLTYPE, RISKFLD, GRNAME, TAGFIELD, TAGVALUE, TAGLIST, TAGQUERY, PDEFNAME, TAGUPDATE, FLDRND, SUBFIELD, PDEFVAL, DEFDESC, DEFPARAM, LOCK_KEY)
+VALUES('SE', '07', '2254', 'SYMBOL', 'Chứng khoán', 'Symbol', 7, 'C', '999999', '999999', 6, 6, NULL, ' ', ' ', 'Y', NULL, 'Y', ' ', ' ', 'Y', 'C', NULL, NULL, NULL, 'SYMBOL', '##########', NULL, NULL, NULL, NULL, 'T', 'N', 'MAIN', NULL, NULL, NULL, 'N', NULL, 'Y', NULL, 'N', NULL, NULL, NULL, NULL);
+INSERT INTO FLDMASTER
+(MODCODE, FLDNAME, OBJNAME, DEFNAME, CAPTION, EN_CAPTION, ODRNUM, FLDTYPE, FLDMASK, FLDFORMAT, FLDLEN, FLDWIDTH, LLIST, LCHK, DEFVAL, VISIBLE, "disable", MANDATORY, AMTEXP, VALIDTAG, LOOKUP, "datatype", INVNAME, FLDSOURCE, FLDDESC, CHAINNAME, PRINTINFO, LOOKUPNAME, SEARCHCODE, SRMODCODE, INVFORMAT, CTLTYPE, RISKFLD, GRNAME, TAGFIELD, TAGVALUE, TAGLIST, TAGQUERY, PDEFNAME, TAGUPDATE, FLDRND, SUBFIELD, PDEFVAL, DEFDESC, DEFPARAM, LOCK_KEY)
+VALUES('SE', '09', '2254', 'PRICE', 'Giá', 'Price', 19, 'N', '#,##0', '#,##0', 16, 16, ' ', ' ', '-1', 'Y', NULL, 'Y', ' ', ' ', 'N', 'N', NULL, NULL, NULL, 'PRICE', '##########', NULL, NULL, NULL, NULL, 'T', 'N', 'MAIN', NULL, NULL, NULL, 'N', 'P_PRICE', 'Y', '0', 'N', NULL, NULL, NULL, NULL);
+INSERT INTO FLDMASTER
+(MODCODE, FLDNAME, OBJNAME, DEFNAME, CAPTION, EN_CAPTION, ODRNUM, FLDTYPE, FLDMASK, FLDFORMAT, FLDLEN, FLDWIDTH, LLIST, LCHK, DEFVAL, VISIBLE, "disable", MANDATORY, AMTEXP, VALIDTAG, LOOKUP, "datatype", INVNAME, FLDSOURCE, FLDDESC, CHAINNAME, PRINTINFO, LOOKUPNAME, SEARCHCODE, SRMODCODE, INVFORMAT, CTLTYPE, RISKFLD, GRNAME, TAGFIELD, TAGVALUE, TAGLIST, TAGQUERY, PDEFNAME, TAGUPDATE, FLDRND, SUBFIELD, PDEFVAL, DEFDESC, DEFPARAM, LOCK_KEY)
+VALUES('SE', '10', '2254', 'TRADE', 'Số lượng giao dịch', 'Trading quantity', 8, 'N', '#,##0', '#,##0', 16, 16, ' ', ' ', '0', 'Y', NULL, 'Y', ' ', ' ', 'N', 'N', NULL, NULL, NULL, NULL, '##########', NULL, NULL, NULL, NULL, 'T', 'N', 'MAIN', NULL, NULL, NULL, 'N', 'P_AMT', 'Y', '0', 'N', NULL, NULL, NULL, NULL);
+INSERT INTO FLDMASTER
+(MODCODE, FLDNAME, OBJNAME, DEFNAME, CAPTION, EN_CAPTION, ODRNUM, FLDTYPE, FLDMASK, FLDFORMAT, FLDLEN, FLDWIDTH, LLIST, LCHK, DEFVAL, VISIBLE, "disable", MANDATORY, AMTEXP, VALIDTAG, LOOKUP, "datatype", INVNAME, FLDSOURCE, FLDDESC, CHAINNAME, PRINTINFO, LOOKUPNAME, SEARCHCODE, SRMODCODE, INVFORMAT, CTLTYPE, RISKFLD, GRNAME, TAGFIELD, TAGVALUE, TAGLIST, TAGQUERY, PDEFNAME, TAGUPDATE, FLDRND, SUBFIELD, PDEFVAL, DEFDESC, DEFPARAM, LOCK_KEY)
+VALUES('SE', '12', '2254', 'QTTY', 'Tổng số lượng', 'Total Quantity', 12, 'N', '#,##0', '#,##0', 16, 16, ' ', ' ', ' ', 'Y', NULL, 'Y', ' ', ' ', 'N', 'N', NULL, NULL, NULL, NULL, '##########', NULL, NULL, NULL, NULL, 'T', 'N', 'MAIN', NULL, NULL, NULL, 'N', 'P_QTTY', 'Y', '0', 'N', NULL, NULL, NULL, NULL);
+INSERT INTO FLDMASTER
+(MODCODE, FLDNAME, OBJNAME, DEFNAME, CAPTION, EN_CAPTION, ODRNUM, FLDTYPE, FLDMASK, FLDFORMAT, FLDLEN, FLDWIDTH, LLIST, LCHK, DEFVAL, VISIBLE, "disable", MANDATORY, AMTEXP, VALIDTAG, LOOKUP, "datatype", INVNAME, FLDSOURCE, FLDDESC, CHAINNAME, PRINTINFO, LOOKUPNAME, SEARCHCODE, SRMODCODE, INVFORMAT, CTLTYPE, RISKFLD, GRNAME, TAGFIELD, TAGVALUE, TAGLIST, TAGQUERY, PDEFNAME, TAGUPDATE, FLDRND, SUBFIELD, PDEFVAL, DEFDESC, DEFPARAM, LOCK_KEY)
+VALUES('SE', '13', '2254', 'CAQTTY', 'Số lượng CK CA', 'CA Quantity', 11, 'N', '#,##0', '#,##0', 11, 11, ' ', ' ', '0', 'Y', NULL, 'Y', ' ', ' ', 'N', 'N', NULL, NULL, NULL, NULL, '##########', NULL, NULL, NULL, NULL, 'T', 'N', 'MAIN', NULL, NULL, NULL, 'N', NULL, 'Y', '0', 'N', NULL, NULL, NULL, NULL);
+INSERT INTO FLDMASTER
+(MODCODE, FLDNAME, OBJNAME, DEFNAME, CAPTION, EN_CAPTION, ODRNUM, FLDTYPE, FLDMASK, FLDFORMAT, FLDLEN, FLDWIDTH, LLIST, LCHK, DEFVAL, VISIBLE, "disable", MANDATORY, AMTEXP, VALIDTAG, LOOKUP, "datatype", INVNAME, FLDSOURCE, FLDDESC, CHAINNAME, PRINTINFO, LOOKUPNAME, SEARCHCODE, SRMODCODE, INVFORMAT, CTLTYPE, RISKFLD, GRNAME, TAGFIELD, TAGVALUE, TAGLIST, TAGQUERY, PDEFNAME, TAGUPDATE, FLDRND, SUBFIELD, PDEFVAL, DEFDESC, DEFPARAM, LOCK_KEY)
+VALUES('SE', '18', '2254', 'AUTOID', 'AUTOID', 'AUTOID', 1, 'N', '#,##0', '#,##0', 16, 16, ' ', ' ', '0', 'N', NULL, 'N', ' ', ' ', 'N', 'N', NULL, NULL, NULL, NULL, '##########', NULL, NULL, NULL, NULL, 'T', 'N', 'MAIN', NULL, NULL, NULL, 'N', NULL, 'Y', '0', 'N', NULL, NULL, NULL, NULL);
+INSERT INTO FLDMASTER
+(MODCODE, FLDNAME, OBJNAME, DEFNAME, CAPTION, EN_CAPTION, ODRNUM, FLDTYPE, FLDMASK, FLDFORMAT, FLDLEN, FLDWIDTH, LLIST, LCHK, DEFVAL, VISIBLE, "disable", MANDATORY, AMTEXP, VALIDTAG, LOOKUP, "datatype", INVNAME, FLDSOURCE, FLDDESC, CHAINNAME, PRINTINFO, LOOKUPNAME, SEARCHCODE, SRMODCODE, INVFORMAT, CTLTYPE, RISKFLD, GRNAME, TAGFIELD, TAGVALUE, TAGLIST, TAGQUERY, PDEFNAME, TAGUPDATE, FLDRND, SUBFIELD, PDEFVAL, DEFDESC, DEFPARAM, LOCK_KEY)
+VALUES('SE', '23', '2254', 'RECUSTODYCD', 'Số LK người nhận', 'Received custodycd', 23, 'C', 'ccc.c.cccccc', 'ccc.c.cccccc', 10, 10, ' ', 'Y', ' ', 'Y', NULL, 'Y', ' ', ' ', 'N', 'C', NULL, NULL, NULL, NULL, '##########', NULL, NULL, NULL, NULL, 'M', 'N', 'MAIN', NULL, NULL, NULL, 'N', NULL, 'Y', NULL, 'N', NULL, NULL, NULL, NULL);
+INSERT INTO FLDMASTER
+(MODCODE, FLDNAME, OBJNAME, DEFNAME, CAPTION, EN_CAPTION, ODRNUM, FLDTYPE, FLDMASK, FLDFORMAT, FLDLEN, FLDWIDTH, LLIST, LCHK, DEFVAL, VISIBLE, "disable", MANDATORY, AMTEXP, VALIDTAG, LOOKUP, "datatype", INVNAME, FLDSOURCE, FLDDESC, CHAINNAME, PRINTINFO, LOOKUPNAME, SEARCHCODE, SRMODCODE, INVFORMAT, CTLTYPE, RISKFLD, GRNAME, TAGFIELD, TAGVALUE, TAGLIST, TAGQUERY, PDEFNAME, TAGUPDATE, FLDRND, SUBFIELD, PDEFVAL, DEFDESC, DEFPARAM, LOCK_KEY)
+VALUES('SE', '24', '2254', 'RECUSTNAME', 'Tên người nhận', 'Received Full name', 24, 'C', ' ', ' ', 50, 50, ' ', ' ', ' ', 'Y', NULL, 'Y', ' ', ' ', 'N', 'C', NULL, NULL, NULL, ' ', NULL, NULL, NULL, NULL, NULL, 'T', 'N', 'MAIN', NULL, NULL, NULL, 'N', NULL, 'Y', NULL, 'N', NULL, NULL, NULL, NULL);
+INSERT INTO FLDMASTER
+(MODCODE, FLDNAME, OBJNAME, DEFNAME, CAPTION, EN_CAPTION, ODRNUM, FLDTYPE, FLDMASK, FLDFORMAT, FLDLEN, FLDWIDTH, LLIST, LCHK, DEFVAL, VISIBLE, "disable", MANDATORY, AMTEXP, VALIDTAG, LOOKUP, "datatype", INVNAME, FLDSOURCE, FLDDESC, CHAINNAME, PRINTINFO, LOOKUPNAME, SEARCHCODE, SRMODCODE, INVFORMAT, CTLTYPE, RISKFLD, GRNAME, TAGFIELD, TAGVALUE, TAGLIST, TAGQUERY, PDEFNAME, TAGUPDATE, FLDRND, SUBFIELD, PDEFVAL, DEFDESC, DEFPARAM, LOCK_KEY)
+VALUES('SE', '30', '2254', 'DESC', 'Diễn giải', 'Description', 40, 'C', ' ', ' ', 250, 250, ' ', ' ', ' ', 'Y', NULL, 'N', ' ', ' ', 'N', 'C', NULL, NULL, NULL, NULL, '##########', NULL, NULL, NULL, NULL, 'T', 'N', 'MAIN', NULL, NULL, NULL, 'N', NULL, 'Y', NULL, 'N', NULL, NULL, NULL, NULL);
+INSERT INTO FLDMASTER
+(MODCODE, FLDNAME, OBJNAME, DEFNAME, CAPTION, EN_CAPTION, ODRNUM, FLDTYPE, FLDMASK, FLDFORMAT, FLDLEN, FLDWIDTH, LLIST, LCHK, DEFVAL, VISIBLE, "disable", MANDATORY, AMTEXP, VALIDTAG, LOOKUP, "datatype", INVNAME, FLDSOURCE, FLDDESC, CHAINNAME, PRINTINFO, LOOKUPNAME, SEARCHCODE, SRMODCODE, INVFORMAT, CTLTYPE, RISKFLD, GRNAME, TAGFIELD, TAGVALUE, TAGLIST, TAGQUERY, PDEFNAME, TAGUPDATE, FLDRND, SUBFIELD, PDEFVAL, DEFDESC, DEFPARAM, LOCK_KEY)
+VALUES('SE', '32', '2254', 'AMT', 'Tổng số tiền hoàn trả', 'Total refund amount', 13, 'N', '#,##0', '#,##0', 16, 16, ' ', ' ', ' ', 'Y', NULL, 'Y', ' ', ' ', 'N', 'N', NULL, NULL, NULL, NULL, '##########', NULL, NULL, NULL, NULL, 'T', 'N', 'MAIN', NULL, NULL, NULL, 'N', 'P_QTTY', 'Y', '0', 'N', NULL, NULL, NULL, NULL);
+INSERT INTO FLDMASTER
+(MODCODE, FLDNAME, OBJNAME, DEFNAME, CAPTION, EN_CAPTION, ODRNUM, FLDTYPE, FLDMASK, FLDFORMAT, FLDLEN, FLDWIDTH, LLIST, LCHK, DEFVAL, VISIBLE, "disable", MANDATORY, AMTEXP, VALIDTAG, LOOKUP, "datatype", INVNAME, FLDSOURCE, FLDDESC, CHAINNAME, PRINTINFO, LOOKUPNAME, SEARCHCODE, SRMODCODE, INVFORMAT, CTLTYPE, RISKFLD, GRNAME, TAGFIELD, TAGVALUE, TAGLIST, TAGQUERY, PDEFNAME, TAGUPDATE, FLDRND, SUBFIELD, PDEFVAL, DEFDESC, DEFPARAM, LOCK_KEY)
+VALUES('SE', '90', '2254', 'CUSTNAME', 'Họ tên', 'Full name', 5, 'C', ' ', ' ', 50, 50, ' ', ' ', ' ', 'Y', NULL, 'N', ' ', ' ', 'N', 'C', NULL, NULL, NULL, ' ', '##########', NULL, NULL, NULL, NULL, 'T', 'N', 'MAIN', NULL, NULL, NULL, 'N', NULL, 'Y', NULL, 'N', NULL, NULL, NULL, NULL);
+
+
+
+
+
+
+
+
+
+INSERT INTO fundtrack.tltx
+(tltxcd, txdesc, en_txdesc, "limit", offlineallow, ibt, ovrrqd, late, ovrlev, prn, "local", "chain", direct, hostacno, backup, txtype, nosubmit, delallow, feeapp, msqrqr, voucher, mnem, msg_amt, msg_acct, withacct, acctentry, bgcolor, display, bkdate, adjallow, glgp, voucherid, ccycd, runmod, restrictallow, refobj, refkeyfld, msgtype, chkbkdate, cfcustodycd, cffullname, visible, chgtypeallow, chksingle)
+VALUES('2254', 'Từ chối chuyển khoản chứng khoán ra ngoài', 'Reject external stocks transfer', NULL, 'Y', 'Y', 'Y', '0', 2, 'Y', NULL, NULL, 'N', ' ', 'Y', 'M', '2', 'N', 'N', 'N', 'SE01', 'SEDEPO', '10', '03', ' ', NULL, 0, 'Y', 'Y', 'Y', 'N', '', '01', 'NET', 'N', NULL, NULL, NULL, 'N', '##', '##', 'Y', 'Y', 'N');
+
+
+select * from tltx where tltxcd  ='2254';
+
+
+INSERT INTO fundtrack.tltxwf
+(autoid, tltxcd, lvel, dstatus, aprlvel, refuselvel, "last", status, pstatus, lastchange)
+VALUES(nextval('seq_tltxwf'), '2254', 1, 'C1', 2, 1, 'N', 'A', NULL, NULL);
+INSERT INTO fundtrack.tltxwf
+(autoid, tltxcd, lvel, dstatus, aprlvel, refuselvel, "last", status, pstatus, lastchange)
+VALUES(nextval('seq_tltxwf'), '2254', 2, 'C2', 2, 1, 'Y', 'A', NULL, NULL);
+
+select * from tltxwf where tltxcd = '2254'
+
+
+select
+	toolkit_fn_gentransaction('2254',
+	'Y',
+	'Y',
+	'Y');
+
+--buoc 5
+
+select
+toolkit_fn_genreqtransaction('2254',
+'function_process_2254');
+
+
+
+SELECT fundtrack.function_process_2254(:p_autoid,:p_custodycd,:p_afacctno,:p_acctno,:p_custname,:p_symbol,:p_trade,:p_blocked,:p_caqtty,:p_qtty,:p_amt,:p_price,:p_recustodycd,:p_recustname,:p_desc,:p_codeid,:pv_action,:p_tlid,:p_role,:p_language,:pv_objname,?,?);
+
+
+
+
+INSERT INTO fundtrack.focmdcode
+(cmdcode, cmdtext, cmduse, cmdtype, cmddesc, objname)
+VALUES('function_process_2254', 'select * from function_process_2254(:p_autoid,:p_custodycd,:p_afacctno,:p_acctno,:p_custname,:p_symbol,:p_trade,:p_blocked,:p_caqtty,:p_qtty,:p_amt,:p_price,:p_recustodycd,:p_recustname,:p_desc,:p_codeid,:pv_action,:p_tlid,:p_role,:p_language,:pv_objname,:p_err_code,:p_err_param);', 'Y', 'user', 'Xy ly 2254', NULL);
+
+select defname || ': ''' || caption  || ''',', defname || ': ''' || en_caption  || ''',', 'p_'||lower(defname) || ': DATA.' || defname  || ',' from fldmaster f  where objname ='2254';
+
+
+
