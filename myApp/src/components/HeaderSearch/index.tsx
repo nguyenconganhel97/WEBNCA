@@ -49,6 +49,7 @@ const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
 
   return (
     <div
+
       className={classNames(className, styles.headerSearch)}
       onClick={() => {
         setSearchMode(true);
@@ -64,6 +65,7 @@ const HeaderSearch: React.FC<HeaderSearchProps> = (props) => {
         }
       }}
     >
+      {/* <h1>NGUYENCONGNAH</h1> */}
       <SearchOutlined
         key="Icon"
         style={{

@@ -12,9 +12,9 @@ export default {
   menu: {
     locale: true,
   },
-  title: 'Ant Design Pro',
+  title: 'Menu',
   pwa: false,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+  logo: 'https://kpluss.com.vn/wp-content/uploads/2019/10/icon-home-8.png',
   iconfontUrl: '',
 } as LayoutSettings & {
   pwa: boolean;

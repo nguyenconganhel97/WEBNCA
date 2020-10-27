@@ -8,7 +8,7 @@ import axios from 'axios';
 import { Layout, Menu, Breadcrumb } from 'antd';
 import { Descriptions, Badge } from 'antd';
 import { Divider } from 'antd';
-
+import $ from 'jquery';
 
 const { Header, Content, Sider } = Layout;
 
@@ -30,6 +30,42 @@ const MenuA = () => {
     setKey(e.target.value);
   }
   function onSearch() {
+
+    $.get({
+      url: "https://192.168.1.153:9446/ibm/iis/igc-rest/v1/search/?types=term&text=Customer&search-properties=name",
+      headers: {
+      'Authorization': 'Basic aXNhZG1pbjpmc3M='},
+      dataType: "JSON",
+      // jsonpCallback: 'callback',
+      success: function func(json){
+      alert(json.name);
+      }
+      });
+
+    // $.ajaxSetup({
+    //   crossDomain: true,
+    //   xhrFields: {
+    //     withCredentials: true
+    //   }
+    // });
+    // var settings = {
+    //   "crossDomain": true,
+    //   "xhrFields" : {
+    //     "withCredentials": true
+    //   },
+    //   "url": "https://192.168.1.153:9446/ibm/iis/igc-rest/v1/search/?types=term&text=Customer&search-properties=name",
+    //   "method": "GET",
+    //   "timeout": 0,
+    //   "headers": {
+    //     "Authorization": "Basic aXNhZG1pbjpmc3M=",
+    //   },
+    // };
+
+    // $.ajax(settings).done(function (response) {
+    //   console.log("LOG1", response);
+    // });
+
+
     axios.get("https://5d984cdf61c84c00147d6e6f.mockapi.io/DemoClass").then((response) => {
       getData(response.data);
       response.data

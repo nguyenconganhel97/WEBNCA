@@ -12,7 +12,7 @@ export default defineConfig({
     hmr: true,
   },
   layout: {
-    name: 'Ant Design Pro',
+    name: 'FSS F1',
     locale: true,
     ...defaultSettings,
   },
@@ -35,6 +35,7 @@ export default defineConfig({
       path: '/user',
       layout: false,
       routes: [
+
         {
           name: 'login',
           path: '/user/login',
@@ -42,41 +43,46 @@ export default defineConfig({
         },
       ],
     },
+    // {
+    //   path: '/welcome',
+    //   name: 'welcome',
+    //   icon: 'smile',
+    //   component: './Welcome',
+    // },
+    // {
+    //   path: '/admin',
+    //   name: 'admin',
+    //   icon: 'crown',
+    //   access: 'canAdmin',
+    //   component: './Admin',
+    //   routes: [
+    //     {
+    //       path: '/admin/sub-page',
+    //       name: 'sub-page',
+    //       icon: 'smile',
+    //       component: './Welcome',
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: 'list.table-list',
+    //   icon: 'table',
+    //   path: '/list',
+    //   component: './ListTableList',
+    // },
     {
-      path: '/welcome',
-      name: 'welcome',
-      icon: 'smile',
-      component: './Welcome',
+      "path": "/",
+      "redirect": "/listKey",
+      "exact": true
     },
     {
-      path: '/admin',
-      name: 'admin',
-      icon: 'crown',
-      access: 'canAdmin',
-      component: './Admin',
-      routes: [
-        {
-          path: '/admin/sub-page',
-          name: 'sub-page',
-          icon: 'smile',
-          component: './Welcome',
-        },
-      ],
-    },
-    {
-      name: 'list.table-list',
-      icon: 'table',
-      path: '/list',
-      component: './ListTableList',
-    },
-    {
-      name: 'Từ điển',
+      name: 'dictionary',
       icon: 'table',
       path: '/listKey',
       component: './MenuA',
     },
     {
-      name: 'Thông tin khách hàng',
+      name: 'customer',
       icon: 'table',
       path: '/listCus',
       component: './MenuCus',

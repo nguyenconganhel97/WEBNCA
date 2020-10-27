@@ -77,7 +77,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       {menu && (
         <Menu.Item key="center">
           <UserOutlined />
-          个人中心
+            <h1>NCA</h1>
         </Menu.Item>
       )}
       {menu && (
