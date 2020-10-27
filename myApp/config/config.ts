@@ -70,6 +70,18 @@ export default defineConfig({
       component: './ListTableList',
     },
     {
+      name: 'Từ điển',
+      icon: 'table',
+      path: '/listKey',
+      component: './MenuA',
+    },
+    {
+      name: 'Thông tin khách hàng',
+      icon: 'table',
+      path: '/listCus',
+      component: './MenuCus',
+    },
+    {
       path: '/',
       redirect: '/welcome',
     },
