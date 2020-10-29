@@ -64,12 +64,12 @@ export default defineConfig({
     //     },
     //   ],
     // },
-    // {
-    //   name: 'list.table-list',
-    //   icon: 'table',
-    //   path: '/list',
-    //   component: './ListTableList',
-    // },
+    {
+      name: 'list.table-list',
+      icon: 'table',
+      path: '/list',
+      component: './ListTableList',
+    },
     {
       "path": "/",
       "redirect": "/listKey",
@@ -86,6 +86,12 @@ export default defineConfig({
       icon: 'table',
       path: '/listCus',
       component: './MenuCus',
+    },
+    {
+      name: 'redux',
+      icon: 'table',
+      path: '/redux',
+      component: './ReduxJs',
     },
     {
       path: '/',

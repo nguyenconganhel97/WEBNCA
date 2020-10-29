@@ -1,9 +1,18 @@
 import { request } from 'umi';
 import { TableListParams, TableListItem } from './data.d';
 
+// export async function queryRule(params?: TableListParams) {
+//   return request('/api/rule', {
+//     params,
+//   });
+// }
+
 export async function queryRule(params?: TableListParams) {
   return request('/api/rule', {
-    params,
+    method: 'POST',
+    data: {
+      
+    },
   });
 }
 
@@ -36,3 +45,5 @@ export async function updateRule(params: TableListParams) {
     },
   });
 }
+
+

@@ -2,7 +2,9 @@
 import { Request, Response } from 'express';
 import { parse } from 'url';
 import { TableListItem, TableListParams } from '@/pages/ListTableList/data';
-
+// const { spawn } = require('child_process');
+// import { spawn } from 'child_process';
+const spawn = require('child_process').spawn;
 // mock tableListDataSource
 const genList = (current: number, pageSize: number) => {
   const tableListDataSource: TableListItem[] = [];
@@ -165,7 +167,33 @@ function postRule(req: Request, res: Response, u: string, b: Request) {
   res.json(result);
 }
 
+function getDictionay(req,res){
+  console.log("LOG2",req.body);
+
+  var dataToSend;
+    // spawn new child process to call the python script
+    const python = spawn('python', ['script1.py']);
+    // collect data from script
+    python.stdout.on('data', function (data) {
+        console.log('Pipe data from python script ...');
+        dataToSend = data.toString();
+        console.log("LOG1",dataToSend);
+    });
+    console.log("LOG3",dataToSend);
+    // in close event we are sure that stream from child process is closed
+    python.on('close', (code) => {
+        console.log(`child process close all stdio with code ${code}`);
+        // send data to browser
+        return dataToSend
+    });
+
+
+}
+
+
+
 export default {
-  'GET /api/rule': getRule,
-  'POST /api/rule': postRule,
+  'POST /api/rule': getDictionay,
+  // 'GET /api/rule': getRule,
+  // 'POST /api/rule': postRule,
 };

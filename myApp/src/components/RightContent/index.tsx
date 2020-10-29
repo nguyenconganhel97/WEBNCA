@@ -5,6 +5,8 @@ import { useModel, SelectLang } from 'umi';
 import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
 import styles from './index.less';
+import $ from 'jquery';
+
 
 export type SiderTheme = 'light' | 'dark';
 

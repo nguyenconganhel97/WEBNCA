@@ -11,6 +11,8 @@ import { Alert } from 'antd';
 import { message, Divider } from 'antd';
 const { Header, Content, Sider } = Layout;
 // const {  Alert  } = antd;
+
+const { spawn } = require('child_process');
 message.config({
   top: 100,
   duration: 2,
@@ -35,6 +37,28 @@ const MenuA = () => {
     setKey(e.target.value);
   }
   function onSearch() {
+
+
+
+    var dataToSend;
+    // spawn new child process to call the python script
+    const python = spawn('python', ['script1.py']);
+    // collect data from script
+    python.stdout.on('data', function (data) {
+      console.log('Pipe data from python script ...');
+      dataToSend = data.toString();
+      console.log("LOG01",dataToSend);
+    });
+    // in close event we are sure that stream from child process is closed
+    python.on('close', (code) => {
+      console.log(`child process close all stdio with code ${code}`);
+      // send data to browser
+      // res.send(dataToSend)
+    });
+
+
+
+
     axios.get("https://5d984cdf61c84c00147d6e6f.mockapi.io/DemoClass").then((response) => {
       getData(response.data);
       response.data
@@ -44,7 +68,7 @@ const MenuA = () => {
           className: '',
           style: {
             float: 'right',
-            marginBottom:"10px"
+            marginBottom: "10px"
           },
           duration: 2,
           // top : 60
