@@ -1,0 +1,74 @@
+Function không cho phép insert bảng dữ liệu muốn insert cần tạo store procedure
+Cú pháp tạo procedure
+
+CREATE OR REPLACE procedure CBOND_SHB.pr_demo(datainput varchar2, p_language varchar2, p_err_code IN OUT  varchar2)
+ IS
+BEGIN
+	p_err_code := '0';
+    FOR i IN 1..5
+    LOOP
+        INSERT INTO AHIHI VALUES ('2' || i);
+    END LOOP;
+--    commit;
+Exception
+When others THEN
+	p_err_code := '-1';
+    dbms_output.put_line('Err: ' || sqlerrm || ' Trace: ' || dbms_utility.format_error_backtrace);
+END
+;
+
+Chạy procedure trả về tham số kết quả
+
+DECLARE
+amount NUMBER;
+BEGIN
+PR_DEMO('a',,'b', amount);
+dbms_output.put_line(amount);
+END;
+
+Cú pháp Function
+
+
+CREATE OR REPLACE FUNCTION CBOND_SHB.fn_get_errmsg(p_errnum varchar2, p_language varchar2 DEFAULT 'vie')
+ RETURN varchar2 
+ IS
+
+
+    l_errdesc   varchar2(2000);
+
+BEGIN
+    FOR i IN (SELECT errdesc, en_errdesc
+            FROM deferror
+            WHERE CAST(nvl(errnum, '0') AS integer) = CAST(nvl(p_errnum, '0') AS integer)
+            )
+    LOOP
+        if p_language <> fn_systemnums('systemnums.vn_lang') then
+            l_errdesc   := i.en_errdesc;
+        else
+            l_errdesc   := i.errdesc;
+        end if;
+    END LOOP;
+
+    if l_errdesc is null then
+        return 'Mã loi [' || to_char(p_errnum) || '] chua duoc dinh nghia.';
+    else
+        RETURN l_errdesc;
+    end if;
+
+Exception
+When others then
+    return 'Mã loi [' || to_char(p_errnum) || '] chua duoc dinh nghia. / undefine error [' || to_char(p_errnum) || '].';
+END
+
+;
+
+
+Cú pháp vòng For
+FOR i IN 1..5
+    LOOP
+        INSERT INTO AHIHI VALUES ('2' || i);
+END LOOP;
+
+
+
+
