@@ -1,0 +1,2 @@
+1)checkout all file 
+=> git reset --hard
