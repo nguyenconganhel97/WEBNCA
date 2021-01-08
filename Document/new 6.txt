@@ -1,0 +1,62 @@
+				
+BEGIN 
+	plog.setBeginSection(pkgctx, 'prc_get_accounts_toclose111');
+    p_err_code  := systemnums.C_SUCCESS;
+    p_err_param := 'SUCCESS';
+   
+
+	plog.setEndSection(pkgctx, 'prc_get_accounts_toclose111');
+exception
+when others then
+  p_err_code := errnums.C_SYSTEM_ERROR;
+  plog.error(pkgctx,'Err: ' || sqlerrm || ' Trace: ' || dbms_utility.format_error_backtrace );
+  plog.setEndSection(pkgctx, 'prc_get_accounts_toclose111');
+end prc_get_accounts_toclose111; 
+
+
+txpks_notify
+pgctx
+
+v_logsbody := plog.error(v_logsctx, v_logsbody);
+plog.debug(pkgctx, v_logsbody);
+plog.error(pkgctx, 'prc_mt_cfmast_otp');
+plog.setEndSection(pkgctx, 'prc_mt_cfmast_otp');
+plog.setEndSection(pkgctx, 'prc_mt_cfsign');
+
+l_objmsg        tx.obj_rectype;
+l_objfields     tx.obj_field_rectype;
+
+perform prc_system_logevent('CFMAST', 'USER', fn_systemnums('systemnums.C_ONLINE_USERID') || l_mobile, 'R', pv_action||' USER');
+txpks_notify.prc_system_logevent('CFMAST', 'ACCOUNTS', p_custodycd|| '~#~' ||'ALL'|| '~#~' ||'ALL', 'R','DELETE CFMAST');
+
+cbond_shb.prc_mt_cfmast 
+
+plog.error(pkgctx,'Err: ' || sqlerrm || ' Trace: ' || dbms_utility.format_error_backtrace );
+            plog.setEndSection(pkgctx, 'prc_mt_cfmast');
+pr_system_genotp1(p_keyval,'OTPTIME_TX','DELQUOTE', 6, 60*60*24,v_OTPval);
+
+
+CREATE OR REPLACE FUNCTION CBOND_SHB.fn_get_errmsg1111(p_errnum varchar2, p_language varchar2 DEFAULT 'vie')
+ RETURN varchar2 
+ IS
+
+
+    l_errdesc   varchar2(2000);
+
+BEGIN
+    
+
+Exception
+When others then
+    return '-1';
+END;
+
+ l_txmsg.txfields('02').defname := 'CUSTID';
+      l_txmsg.txfields('02').TYPE := 'C';
+      l_txmsg.txfields('02').VALUE := p_CUSTID;
+
+
+ prc_insertemaillog(l_Email,'106E', l_data_source, p_CUSTODYCD, l_currdate, l_orgpasswrd);
+ 
+ select proname,prosrc from pg_proc where prosrc like '%%';
+	
