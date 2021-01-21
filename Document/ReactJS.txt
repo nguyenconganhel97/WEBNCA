@@ -1,0 +1,55 @@
+
+//Sử dụng useEffect hook như componentDidMount
+  useEffect(() => {
+    const getUserAPI = 'https://5df8a4c6e9f79e0014b6a587.mockapi.io/freetuts/users'
+ 
+    //Gọi API bằng axios
+    axios.get(getUserAPI).then((res) => {
+      // Cập nhật lại listUser bằng
+      // Bạn có thể xem lại bài viết về useState()
+      setListUser(res.data);
+    }).catch((err) => {
+      //Trường hợp xảy ra lỗi
+      console.log(err);
+      alert("Xảy ra lỗi");
+    })
+ 
+  }, [])
+  
+  
+  
+   //Sử dụng useEffect() như componentDidUpdate
+  useEffect(() => {
+    document.title = `(${count}) lần click`
+  })
+  
+  
+   useEffect(() => {
+    //Được gọi khi component render
+    console.log('render!');
+    // useEffect trả về một hàm ,
+    // hàm trả về đó là đóng vai trò như
+    // là componentWillUnmount
+    return () => console.log('unmounting...');
+  })
+  
+  
+  
+  let email = 'nguyenconganhel@****#$@#$_2342';
+var regExpr = /[^a-zA-Z0-9-. @*]/g;
+console.log(email.replace(regExpr, ""))
+
+replace(/[\D]/g, "");
+
+let str = '2*R@R$@ccccc+_@#+++$@#$_'
+let a = str.replace(/[\W]/g, "");
+console.log(a)
+
+
+  
+  
+  
+  
+  
+  
+  
