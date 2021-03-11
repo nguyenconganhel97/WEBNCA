@@ -1,0 +1,190 @@
+1339 webuser
+1333 bps
+1338 processcing
+1336 synserver
+1347 sso
+5432 db postgres
+8181 servicemix
+5672 rabbitmq
+6379 redis
+
+
+netstat -lntup | grep 1333
+
+netstat -lntup | grep 1339
+
+./pg_ctl -D /home/patriotx/pgsql/10/data/start
+
+13/10/2020 Application Pools và Site
+Pools luôn cần được khởi tạo trước
+
+
+pass root 243 : Fss@app243
+pass root uat_evr : Fss@app243
+
+
+select distinct a.CDVAL VALUECD, a.CDVAL VALUE, a.CDCONTENT DISPLAY, a.EN_CDCONTENT EN_DISPLAY from allcode a where a.cdtype='OX' and a.cdname='INTRCURVETP'
+
+
+copy file tu sv nay sang ben kia 
+ scp ~/patriot_webuser/webuser20200304.zip fssrv@web-01:/home/fssrv/
+
+5f11e5e6667bbff9e84ead005194cce3
+
+ln -s /home/admin/everest/webuser/node_modules/.bin/webpack /usr/bin/webpack
+
+
+$V{PAGE_NUMBER}$V{PAGE_NUMBER}
+
+  var tempFile = __dirname+'/demo.pdf';
+            console.log("LOGGG"tempFile);
+			
+			
+			
+Anh gửi thông tin server UAT:
+IP: 10.10.192.152 User:admin / Pass:+_)123Abc
+
+
+
+UserName:fss1 / UserPass:Fss@123$
+UserName:fss1 / UserPass:Fss@123$
+fss2/Fss2@432!
+GroupName:OCSVPN-GROUP / GroupPass: ocs@vpn12#
+
+
+
+
+tail -222 /opt/CCP/apache-servicemix-6.1.2/data/log/servicemixerror.log
+tail -222 /opt/CCP/apache-servicemix-6.1.2/data/log/servicemix.log
+
+data = commonUtil.convertPropsNullToEmpty(data); xét các thuộc tính không null
+
+BPS của SHB trong đường dẫn khác /home/admin/SHB/bpserver
+
+SELECT ':p_'||LOWER( fld.defname)|| ''
+FROM fldmaster fld WHERE fld.objname like '%ISSUERS'
+order by odrnum;
+
+mk skype : 0975797156El@977
+
+select pronameprosrc from pg_proc where prosrc like '%%';
+
+DECLARE
+l_retrun number;
+BEGIN
+l_retrun := fwpks_toolkit.prc_generate_function (p_tablename=>'PRODUCT'); --Vi du PRODUCT
+dbms_output.put_line(l_retrun);
+END;
+
+objectlog.autoid = maintainlog.objid
+
+select * from source_maintain
+order by lastchange desc;
+
+ l_strSQL := 'SELECT delatappr FROM APPRVRQD WHERE OBJNAME = '''|| l_tablename ||'''';
+ 
+  l_strSQL :=  'SELECT  COUNT (*)  FROM '||l_tablename|| ' Where 0=0 and '|| l_clause || ' AND status  IN (''R'') ';
+
+
+plog.error(pkgctx '{"p_err_code"' || p_err_code || ' "p_err_field"'||p_err_field||' "l_arrInput[i]"'||l_arrInput[i]||'"}');
+plog.setEndSection(pkgctx 'prc_mt_cfmast_check');
+
+select actype VALUECD, actype VALUE, actype||'-'||typename DISPLAY, actype||'-'||typename EN_DISPLAY from aftype WHERE STATUS  = 'A'
+l_currdate  := getcurrdate();
+
+      IF TO_DATE(p_settdate, 'DD/MM/YYYY') <= l_currdate Then
+                p_err_code := '-102229';
+                p_err_param := fn_get_errmsg(p_err_code,p_language);
+                return;
+      END IF;
+
+
+
+
+DECLARE
+P_ERROR_CODE VARCHAR2(32000);
+BEGIN
+txpks_notify.pr_batch_notify
+(p_error_code=>p_error_code);
+END;
+
+RV 8964
+
+SHB 3021
+
+
+3021
+
+fn_process_3021
+
+prc_txprocess_3021
+
+prc_txproccess
+
+TXPKS_#3021
+
+p_txmsg.txfields(c_quantity).value
+
+if(l_count = 0) THEN 
+			    	
+			    	p_err_code := errnums_trans.C_CF_COACCT_WRONG;
+		            plog.setendsection (pkgctx, 'fn_txPreAppCheck');
+		            RETURN p_err_code;
+			    END IF;
+
+l_c_orderid          p_txmsg.txfields(c_orderid).value;
+l_c_contract_no      p_txmsg.txfields(c_contract_no).value;
+l_c_treasurysymbol   p_txmsg.txfields(c_treasurysymbol).value;
+l_c_symbol           p_txmsg.txfields(c_symbol).value;
+l_c_category         p_txmsg.txfields(c_category).value;
+l_c_custodycd        p_txmsg.txfields(c_custodycd).value;
+l_c_fullname         p_txmsg.txfields(c_fullname).value;
+l_c_idcode           p_txmsg.txfields(c_idcode).value;
+l_c_seller           p_txmsg.txfields(c_seller).value;
+l_c_txdate           p_txmsg.txfields(c_txdate).value;
+l_c_execqtty         to_number(nvl(p_txmsg.txfields(c_execqtty).value,'0');
+l_c_parvalue         to_number(nvl(p_txmsg.txfields(c_parvalue).value,'0');
+l_c_total            to_number(nvl(p_txmsg.txfields(c_total).value,'0');
+l_c_price            to_number(nvl(p_txmsg.txfields(c_price).value,'0');
+l_c_feebuyer         to_number(nvl(p_txmsg.txfields(c_feebuyer).value,'0');
+l_c_total_execamt    to_number(nvl(p_txmsg.txfields(c_total_execamt).value,'0');
+l_c_rm               p_txmsg.txfields(c_rm).value;
+l_c_cbql             p_txmsg.txfields(c_cbql).value;
+l_c_ctv              p_txmsg.txfields(c_ctv).value;
+l_c_pos              p_txmsg.txfields(c_pos).value;
+	
+	
+INSERT INTO CBOND_SHB.IVTRAN
+(AUTOID, TXNUM, TXDATE, TLTXCD, BKDATE, TRDESC, ACCTNO, CODEID, SYMBOL, SRTYPE, TXCD, NAMT, CAMT, "REF", DELTD, ACCTREF, LVEL)
+VALUES(760228, '000001004529', TIMESTAMP '2021-07-12 00:00:00.000000', '8725', TIMESTAMP '2021-07-12 00:00:00.000000', 'Tien ban 1 Ha.GHNDT.5Y cho REVC000019', '000001000145000722', '722', 'Ha.GHNDT.5Y', 'NN', '0016', 1230000, NULL, '1', 'N', NULL, 2);
+
+SELECT * FROM APPTX a WHERE TBLNAME = 'IVMAST' AND FIELD ='RECEIVING';
+
+ p_txmsg.txnum,-- txnum,
+  p_txmsg.txdate,-- txdate,
+  p_txmsg.tltxcd,-- tltxcd,
+  p_txmsg.busdate,-- bkdate,
+
+
+p_txmsg.txnum
+ p_txmsg.txdate,--p_txdate in date,
+                              p_txmsg.busdate,--p_busdate in date,
+                              p_txmsg.txtime,-- p_txtime in varchar2,
+                              p_txmsg.tltxcd,-- p_tltxcd in varchar2,
+                              p_txmsg.txdesc,--p_txdesc in varchar2,
+                              p_txmsg.txstatus,-- p_txstatus in varchar2,  
+
+	DECLARE
+P_ERROR_CODE VARCHAR2(32000);
+BEGIN
+-- Now Call the stored program
+txpks_notify.pr_batch_notify
+(p_error_code=>p_error_code);
+END;
+
+--check phan quyen
+checkfunctionallow
+
+getcurrdate()
+
+Tài sản giao dịch = trade + blocked + waiting + receiving + tradesip + blockedsip

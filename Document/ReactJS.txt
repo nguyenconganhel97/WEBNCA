@@ -243,7 +243,9 @@ const propsPDF = {
     }
 
 
-												
+			
+
+let logic = (/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i).test(this.state.datauser.p_email);			
 												
   
   
