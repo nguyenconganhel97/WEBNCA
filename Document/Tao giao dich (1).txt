@@ -1,0 +1,47 @@
+select * from tltx
+where tltxcd = 'XXXX';
+
+select * from tltxwf
+where tltxcd = 'XXXX'; --ovrrqd = N
+
+select --fldtype,datatype, 
+* 
+from fldmaster
+where objname = 'XXXX';
+
+delete tbl_txpks
+where tltxcd = 'XXXX';
+
+BEGIN
+    IF NOT fwpks_toolkit.fn_gentransactpkg('XXXX', 'Y', 'N', 'Y' ) THEN
+        dbms_output.put_line('ERRRROR');
+   END IF;
+END; 
+
+SELECT * FROM tbl_txpks
+where tltxcd = 'XXXX';
+
+DECLARE
+  l_return CLOB;
+BEGIN
+  l_return := fwpks_toolkit.toolkit_fn_genreqtransaction
+    (p_tltxcd=>'XXXX',
+     p_funcname=>'ten_procedure');
+     dbms_output.put_line(l_return);
+END;
+
+
+
+-- tao maintain 
+
+
+
+DECLARE
+  l_retrun number;
+BEGIN
+  l_retrun := fwpks_toolkit.prc_generate_function (p_tablename=>'REINVEST_RATE'); --Vi du PRODUCT
+    dbms_output.put_line(l_retrun);
+END;
+
+select * from source_maintain
+order by lastchange desc;

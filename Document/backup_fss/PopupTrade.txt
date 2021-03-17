@@ -1,0 +1,1009 @@
+import React from 'react';
+import { Modal } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import flow from 'lodash.flow';
+import translate from 'app/utils/i18n/Translate.js';
+import { isGreaterDay, isEqualsDay } from '../../../../../Helpers';
+import Select from 'react-select';
+import RestfulUtils from 'app/utils/RestfulUtils';
+import { showNotifi } from 'app/action/actionNotification.js';
+import DateInput from 'app/utils/input/DateInput';
+import NumberFormat from 'react-number-format';
+import DropdownFactory from 'app/utils/DropdownFactory'
+import { toast } from 'react-toastify';
+
+
+class PopupTrade extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            tempOTP: false,
+            title: '',
+            ordervalue: 0,
+            METHOD: 'L'
+        };
+    };
+    reset() {
+        this.setState({
+            EXPDATE: '',
+            PRICE: 0,
+            QUOTERATE: 0,
+            SELLFEE: null,
+            SELLTAX: null,
+            PRICE: null,
+            METHOD: 'L'
+        });
+    }
+    close() {
+        let data = this.props.dataRow
+        let PriceORG = data.EXECAMT / data.EXECQTTY / 1
+        if (data.CHUAHETHAN == 'false' && data.CATEGORY == 'T') {
+            data.CATEGORY = 'O',
+                data.PRODUCTID = 0
+        }
+        let pk = {
+            ...data,
+            EXECQTTY: this.state.EXECQTTY,
+            execamt: this.convertNumber(this.state.PRICE || PriceORG),
+            relative: this.state.RELATED,
+            expdate: this.state.EXPDATE,
+            otpNum: this.state.otpNum,
+            acbuyer: data.ACBUYER,
+            QUOTERATE: this.state.QUOTERATE,
+            publicAccount: this.state.publicAccount,
+            tradingRate: this.state.tradingRate,
+            method: this.state.METHOD
+        }
+        this.props.closePopUp(pk);
+        this.reset()
+    }
+    closeModal() {
+        this.props.closePopupOnly(this.props.dataRow);
+        this.reset()
+    }
+    checkExpireDate() {
+        if (this.state.EXPDATE == '' || this.state.EXPDATE == undefined) {
+            return true;
+        } else if (isEqualsDay(this.state.EXPDATE, this.props.tradingdate) || isGreaterDay(this.state.EXPDATE, this.props.tradingdate)) {
+            return true
+        }
+        return false
+    }
+    convertNumber(x) {
+        if (x) {
+
+            var i = 0;
+            var arr = [];
+            arr = x.split(",")
+            var y = '';
+            for (i; i < arr.length; i++) {
+                y += arr[i]
+            }
+            return y
+        }
+
+    }
+    hasError() {
+        let price = window.$('#price').val()
+        if (!price) {
+            window.$('#price').focus()
+            return this.props.strings.emptyPrice
+        }
+        if (price == '0') {
+            window.$('#price').focus()
+            return this.props.strings.zeroPrice
+        }
+        let rate = window.$('#rate').val()
+        if (!rate) {
+            window.$('#rate').focus()
+            return this.props.strings.emptyRate
+        }
+        if (rate == '0') {
+            window.$('#rate').focus()
+            return this.props.strings.zeroRate
+        }
+        return false
+    }
+
+
+    submitGroup = () => {
+        // console.log('stateeeeeee', this.state)
+        let self = this
+        let data = this.state
+        var { dispatch } = this.props;
+        var datanotify = {
+            type: "",
+            header: "",
+            content: ""
+        }
+        // var mssgerr = '';
+        // for (let index = 0; index < this.state.checkFields.length; index++) {
+        //     const element = this.state.checkFields[index];
+        //     mssgerr = this.checkValid(element.name, element.id);
+        //     if (mssgerr !== '')
+        //         break;
+        // }
+
+        // if (mssgerr == '') {
+
+
+
+        let dataapp = {
+
+            pv_action: 'ADD',
+            p_orderid: this.state.ORDERID,
+            p_contract_no: this.state.CONTRACT_NO,
+            p_treasurysymbol: this.state.TREASURYSYMBOL,
+            p_symbol: this.state.SYMBOL,
+            p_category: this.state.CATEGORY,
+            p_custodycd: this.state.CUSTODYCD,
+            p_fullname: this.state.FULLNAME,
+            p_idcode: this.state.IDCODE,
+            p_seller: this.state.CUSTODYCD_SELLER,
+            p_txdate: this.state.TXDATE,
+            p_execqtty: this.state.EXECQTTY,
+            p_parvalue: this.state.PARVALUE,
+            p_total: this.state.TOTAL,
+            p_price: this.state.PRICE,
+            p_feebuyer: this.state.FEEBUYER,
+            p_total_execamt: this.state.TOTAL_EXECAMT,
+            p_rm: this.state.RM,
+            p_cbql: this.state.CBQL,
+            p_ctv: this.state.CTV,
+            p_pos: this.state.POS,
+            // p_confirmno: this.state.p_CONFIRMNO,
+
+            // p_symbol: this.state.p_SYMBOL,
+
+            // p_custodycds: this.state.p_ACSELLER,
+
+            // p_custodycdr: this.state.p_ACBUYER,
+
+            // p_contrtyp: this.state.p_CONTRTYP,
+            // p_amount: this.state.p_AMOUNT1,
+            // p_qtty: this.state.p_QTTY,
+
+            // p_kl: this.state.QTTY,
+
+            // p_desc: this.state.datagroup.p_DESC,
+
+            p_language: this.props.language,
+            pv_objname: this.props.OBJNAME
+        };
+        //console.log('dataapp ', dataapp)
+
+        RestfulUtils.post('/cashmanual/prc_moneyconfirm', dataapp)
+            .then(res => {
+                if (res.EC == 0) {
+                    datanotify.type = "success";
+                    datanotify.content = this.props.strings.CONTENT1;
+                    dispatch(showNotifi(datanotify));
+                    self.close();
+                    self.props.load()
+                } else {
+                    datanotify.type = "error";
+                    datanotify.content = res.EM;
+                    dispatch(showNotifi(datanotify));
+                }
+                // success = (res.EC == 0);
+                // success ? toast.success(this.props.strings.success, { position: toast.POSITION.BOTTOM_RIGHT })
+                //     : toast.error(res.EM, { position: toast.POSITION.BOTTOM_RIGHT })
+                // if (this.state.selectedRows.size == i) {
+                this.setState({ loaded: false })
+                //this.refresh()
+                let data = {
+                    pageSize: this.state.pagesize,
+                    page: this.state.page,
+                    sorted: this.state.sortSearch,
+                    filtered: this.state.keySearch,
+                }
+                this.props.createSuccess();
+                //this.fetchData(data, { props: { columns: this.state.colum } })
+                this.props.closeModalDetail();
+                this.clearGroup()
+
+                // }
+            });
+
+    }
+    // async submit() {
+
+    //     var { dispatch } = this.props;
+    //     var datanotify = {
+    //         type: "",
+    //         header: "",
+    //         content: ""
+    //     }
+    //     let err = this.hasError()
+    //     if (err) {
+    //         toast.error(err, { position: toast.POSITION.BOTTOM_RIGHT })
+    //         return
+    //     }
+    //     let PriceORG = this.props.dataRow.EXECAMT / this.props.dataRow.EXECQTTY / 1
+    //     if (Number(this.convertNumber(this.props.dataRow.REMAIN)) >= Number(this.convertNumber(this.state.EXECQTTY))) {
+    //         if (Number(this.convertNumber(this.state.EXECQTTY)) > 0 && this.checkExpireDate() == true) {
+    //             if (this.props.auth.user.ISCUSTOMER == 'N') {
+    //                 let data = this.props.dataRow
+    //                 let pk = {}
+    //                 pk.language = 'vie'
+    //                 pk.OBJNAME = 'NEGT_INSR'
+    //                 pk.refsubsid = data.CONFIRMNO
+    //                 pk.symbol = data.SYMBOL
+    //                 pk.acbuyer = data.PO_ACBUYER
+    //                 pk.execqtty = this.state.EXECQTTY
+    //                 pk.execamt = this.convertNumber(this.state.PRICE || PriceORG)
+    //                 pk.productid = data.PRODUCTID || 0
+    //                 pk.otpNum = this.state.otpNum || ''
+    //                 pk.otp = ''
+    //                 pk.relative = this.state.RELATED
+    //                 pk.expdate = this.state.EXPDATE
+    //                 pk.adid = typeof (this.props.dataRowParent) != 'undefined' ? this.props.dataRowParent.ADID : data.ADID
+    //                 pk.buyconfirmno = data.CONFIRMNO;
+    //                 pk.category = data.CATE_SIMPLE != 'I' || data.CHUAHETHAN == 'false' ? data.CATE_SIMPLE : 'O'
+    //                 pk.quoterate = this.state.tradingRate
+    //                 pk.public = this.state.publicAccount
+    //                 pk.sellopt = this.state.METHOD
+    //                 pk.rate = '0',
+    //                     // tham so them cho 8818
+    //                     pk.orgdate = data.ORGDATE
+    //                 pk.maxqtty = data.REMAIN,
+    //                     pk.fee = this.state.SELLFEE || data.SELLFEE,
+    //                     pk.tax = this.state.SELLTAX || data.SELLTAX,
+    //                     pk.selloutvalue = Number(this.convertNumber(this.state.PRICE)) * Number(this.convertNumber(this.state.EXECQTTY)) - Number(this.convertNumber(this.state.SELLTAX)) - Number(this.convertNumber(this.state.SELLFEE)),
+    //                     pk.buyprice = data.BUYCOST,
+    //                     pk.buyvalue = Math.round(Number(data.SETTAMTPER) * Number(this.convertNumber(this.state.EXECQTTY))),
+    //                     pk.receivedcoupon = data.COUPON_SUM,
+    //                     pk.addcoupon = data.COUPON_NOW,
+    //                     pk.remaincoupon = data.COUNPON_REMAIN,
+    //                     pk.priceatduedate = data.PRODUCTSELLBACKDUE
+    //                 let resData = await RestfulUtils.post('/order/processingTrade', pk)
+    //                 if (resData.EC == 0) {
+    //                     datanotify.type = "success";
+    //                     datanotify.content = resData.EM;
+    //                     dispatch(showNotifi(datanotify));
+    //                     this.props.closePopupOnly();
+    //                 } else {
+    //                     datanotify.type = "error";
+    //                     datanotify.content = resData.EM;
+    //                     dispatch(showNotifi(datanotify));
+    //                 }
+    //                 return
+    //             }
+    //             let resData = await RestfulUtils.post('/otp/sendOtpToBuyer', {
+    //                 CUSTODYCD: '',
+    //                 symbol: this.props.dataRow.SYMBOL,
+    //                 qtty: this.convertNumber(this.state.EXECQTTY || this.props.dataRow.EXECQTTY),
+    //                 price: this.convertNumber(this.state.PRICE || PriceORG),
+    //                 acctno: this.props.dataRow.PO_ACBUYER,
+    //                 OBJNAME: 'NEGT_INSR',
+    //                 //switchOtpOrTrade: 'notOTP'
+    //                 switchOtpOrTrade: 'OTP',
+    //                 CATEGORY: '',
+    //                 otpkey: '8918|' + this.props.dataRow.CONFIRMNO,
+    //                 tltxcd: '8918',
+    //             })
+    //             if (resData.EC == 0) {
+    //                 await this.setState({
+    //                     otpNum: resData.DT[0].OTPNUM
+    //                 });
+
+
+    //             }
+    //             else {
+    //                 datanotify.type = "error";
+    //                 datanotify.content = resData.EM;
+    //                 dispatch(showNotifi(datanotify));
+    //             }
+    //             await this.close();
+    //             this.reset()
+    //         } else if (Number(this.state.EXECQTTY) <= 0) {
+    //             datanotify.type = "error";
+    //             datanotify.content = this.props.strings.execqttylessthanZero;
+    //             dispatch(showNotifi(datanotify));
+    //         } else if (this.checkExpireDate() == false) {
+    //             datanotify.type = "error";
+    //             datanotify.content = this.props.strings.expdateInvalid;
+    //             dispatch(showNotifi(datanotify));
+    //         }
+    //     } else {
+    //         datanotify.type = "error";
+    //         datanotify.content = this.props.strings.requiredexecqtty;
+    //         dispatch(showNotifi(datanotify));
+    //     }
+    // }
+    // tinh ra gia theo lai suat nhap vao
+    getSellPrice = async () => {
+        // const data = this.props.dataRow
+        // await RestfulUtils.post('/order/getPriceQuote', {
+        //     OBJNAME: 'NEGT_INSR',
+        //     symbol: data.SYMBOL,
+        //     acctno: data.PO_ACBUYER,
+        //     sellrate: this.state.QUOTERATE || 0,
+        //     productid: data.CHUAHETHAN=='true'?data.PRODUCTID:0,
+        //     orgdate: data.ORGDATE,
+        //     orgprice: data.ORGPRICE
+        // }).then(rs => {
+        //     this.setState({
+        //         PRICE: rs.DT[0].SELLQUOTE
+        //     });
+        // })
+        this.setState({
+            PRICE: this.props.dataRow.BUYCOST
+        });
+    }
+    getsellfee = () => {
+        //console.log('aaaaaaaaaaaaaaaaaaaa',this.state.EXECQTTY)
+        let data = {
+            p_cmdcode: "fn_calc_fee_sell_fee_tax",
+            p_input1: this.props.dataRow.SYMBOL,
+            p_input2: this.props.dataRow.BUYCUSTODYCD || '',
+            p_input3: (Number(this.convertNumber(this.state.PRICE || '0')) * Number(this.convertNumber(this.state.EXECQTTY || '0'))) + '',
+            p_input4: this.props.dataRow.PRODUCTID,
+            p_input5: this.props.dataRow.COMBOID || '45',
+            p_input6: "",
+            p_input7: "",
+            p_input8: "",
+            p_input9: "",
+            p_input10: "",
+            p_input11: "",
+            p_input12: "",
+            p_input13: "",
+            p_input14: "",
+            p_input15: "",
+            OBJNAME: "NEGT_INSR",
+
+        }
+        RestfulUtils.post('/order/getValuePublic', { ...data }).then((resData) => {
+            if (resData.EC == 0) {
+                //console.log('aaaaaaaaaaaaaa',resData)
+                this.setState({
+                    SELLFEE: resData.DT[0].SELLFEE,
+                    SELLTAX: resData.DT[0].SELLTAX,
+                    // VOUCHER: resData.DT[0].VOUCHER
+                });
+            }
+        });
+    };
+    tinhLaiSuat(account = '', price = '0', volumn = '0') {
+        const { dataRow } = this.props
+        const data = {
+            p_cmdcode: 'fn_calc_investrate',
+            p_input1: dataRow.ISAGENCY ? 'Y' : 'N',
+            p_input2: dataRow.SBDEFACCTNO,
+            p_input3: dataRow.ORGDATE,
+            p_input4: volumn || '0',
+            p_input5: dataRow.SYMBOL,
+            p_input6: dataRow.CATE_SIMPLE,
+            p_input7: dataRow.PO_ACBUYER,
+            p_input8: dataRow.PRODUCTID || '0',
+            p_input9: '0',
+            p_input10: account || '',
+            p_input11: dataRow.ORGPRICE || '0',
+            p_input12: /*this.state.VOUCHER || */'0',
+            p_input13: /*this.state.BUYFEE || */'0',
+            p_input14: dataRow.BUYCUSTODYCD || '',
+            p_input15: Number(price) * Number(volumn) || '0',
+            OBJNAME: "NEGT_INSR",
+        }
+        RestfulUtils.post('/order/getValuePublic', data)
+            .then(rs => {
+                if (rs.EC == 0) {
+                    if (rs.DT.length > 0) {
+                        this.setState({
+                            tradingRate: rs.DT[0].INVESTRATE
+                        });
+                    }
+
+                }
+
+
+            })
+    }
+    tinhGia(rate = '0', quantity = '0') {
+        const { dataRow } = this.props
+        const data = {
+            // --		p_input1:p_orgdeal
+            // --		p_input2:p_acctno
+            // --		p_input3:p_orgdate
+            // --		p_input4:p_orgprice
+            // --		p_input5:p_sellrate
+            // --		p_input6:p_qtty
+            // --		p_input7:p_symbol
+            // --		p_input8:p_category
+            // --		p_input9:p_productid
+            // --		p_input10:p_custodycd
+            p_cmdcode: 'fn_calc_sellprice',
+            p_input1: dataRow.ORGCONFIRMNO,
+            p_input2: dataRow.PO_ACBUYER,
+            p_input3: dataRow.ORGDATE,
+            p_input4: dataRow.ORGPRICE,
+            p_input5: rate,
+            p_input6: quantity,
+            p_input7: dataRow.SYMBOL,
+            p_input8: dataRow.CATE_SIMPLE,
+            p_input9: dataRow.PRODUCTID || '0',
+            p_input10: dataRow.BUYCUSTODYCD,
+            p_input11: '',
+            p_input12: '',
+            p_input13: '',
+            p_input14: '',
+            p_input15: '',
+            OBJNAME: "NEGT_INSR",
+        }
+        RestfulUtils.post('/order/getValuePublic', data)
+            .then(rs => {
+                if (rs.EC == 0) {
+                    if (rs.DT.length > 0) {
+                        this.setState({
+                            PRICE: rs.DT[0].PRICE
+                        });
+                    }
+
+                }
+
+
+            })
+    }
+    getSellPriceUseParam = (data) => {
+        this.setState({
+            PRICE: this.props.dataRow.BUYCOST
+        });
+    }
+    async UNSAFE_componentWillReceiveProps(nextProps) {
+        await this.setState({
+            publicAccount: 'Y',
+            defaulExec: nextProps.dataRow.REMAIN,
+            PRICE: nextProps.dataRow.BUYCOST,
+            EXECQTTY: nextProps.dataRow.REMAIN,
+            // PRICE: nextProps.dataRow.PUTVALUE,
+            QUOTERATE: nextProps.dataRow.LS_THI_TRUONG
+        });
+
+        await this.getsellfee()
+        await this.getSellPriceUseParam(nextProps.dataRow)
+        await this.tinhLaiSuat(null, nextProps.dataRow.BUYCOST, nextProps.dataRow.REMAIN)
+    }
+    async getOnChange(event) {
+        const name = event.target.name;
+        const value = event.target.value;
+
+        await this.setState({
+            [name]: value
+        });
+    }
+    onChange(type, event) {
+        if (event.target) {
+
+            this.state[type] = event.target.value;
+        }
+        else {
+            this.state[type] = event.value;
+        }
+        this.setState({
+            [type]: event.target.value
+        });
+        this.getsellfee()
+
+    }
+    onChangeRate(type, event) {
+        if (event.target) {
+
+            this.state[type] = event.target.value;
+        }
+        else {
+            this.state[type] = event.value;
+        }
+        this.setState({
+            [type]: event.target.value
+        });
+        this.getsellfee()
+        this.tinhGia(event.target.value.replace(',', ''), this.state.EXECQTTY)
+    }
+    onChangepRICE(type, event) {
+        if (event.target) {
+
+            this.state[type] = event.target.value;
+        }
+        else {
+            this.state[type] = event.value;
+        }
+        this.setState({
+            [type]: event.target.value
+        });
+        this.getsellfee()
+        this.tinhLaiSuat(null, event.target.value.replace(/,/g, ''), this.state.EXECQTTY)
+
+    }
+    onChangeDate(type, event) {
+        this.setState({
+            [type]: event.value
+        });
+    }
+    onChangeMethod(type, e) {
+        this.setState({
+            ['METHOD']: e.value
+        });
+    }
+
+    render() {
+        let data = this.props.dataRow
+        return (
+            <div className="popup-form">
+                <Modal show={this.props.showModalDetail} bsSize="large" onHide={this.closeModal}>
+                    <Modal.Header>
+                        <Modal.Title><div className="title-content col-md-6">{this.props.strings.title}<button type="button" className="close" onClick={this.closeModal.bind(this)}><span aria-hidden="true">×</span><span className="sr-only">Close</span></button></div></Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body style={{ overflow: "auto", height: "100%", width: "100%" }}>
+                        <form autoComplete='off'>
+                            <div className="panel-body " >
+                                <div className="add-info-account">
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                            <h5><b>{this.props.strings.ORDERID}</b></h5>
+                                        </div>
+                                        <div className="col-md-7">
+                                            <label disabled={true} className="form-control" id="lblSYMBOL">{this.props.dataRow.ORDERID}</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                            <h5><b>{this.props.strings.CONTRACTNO}</b></h5>
+                                        </div>
+                                        <div className="col-md-7">
+                                            <label disabled={true} className="form-control" id="lblSYMBOL">{this.props.dataRow.CONTRACTNO}</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                            <h5><b>{this.props.strings.TREASURYSYMBOL}</b></h5>
+                                        </div>
+                                        <div className="col-md-7">
+                                            <label disabled={true} className="form-control" id="lblSYMBOL">{this.props.dataRow.TREASURYSYMBOL}</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                            <h5><b>{this.props.strings.SYMBOL}</b></h5>
+                                        </div>
+                                        <div className="col-md-7">
+                                            <label disabled={true} className="form-control" id="lblSYMBOL">{this.props.dataRow.SYMBOL}</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                            <h5><b>{this.props.strings.PRODUCT}</b></h5>
+                                        </div>
+                                        <div className="col-md-7">
+                                            <label disabled={true} className="form-control" id="lblSYMBOL">{this.props.dataRow.PRODUCT}</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                            <h5><b>{this.props.strings.CUSTODYCD_BUYER}</b></h5>
+                                        </div>
+                                        <div className="col-md-7">
+                                            <label disabled={true} className="form-control" id="lblSYMBOL">{this.props.dataRow.CUSTODYCD_BUYER}</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                            <h5><b>{this.props.strings.FULLNAME_BUYER}</b></h5>
+                                        </div>
+                                        <div className="col-md-7">
+                                            <label disabled={true} className="form-control" id="lblSYMBOL">{this.props.dataRow.FULLNAME_BUYER}</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                            <h5><b>{this.props.strings.IDCODE_BUYER}</b></h5>
+                                        </div>
+                                        <div className="col-md-7">
+                                            <label disabled={true} className="form-control" id="lblSYMBOL">{this.props.dataRow.IDCODE_BUYER}</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                            <h5><b>{this.props.strings.ACSELLER}</b></h5>
+                                        </div>
+                                        <div className="col-md-7">
+                                            <label disabled={true} className="form-control" id="lblSYMBOL">{this.props.dataRow.ACSELLER}</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                            <h5><b>{this.props.strings.ORGDATE}</b></h5>
+                                        </div>
+                                        <div className="col-md-7">
+                                            <label disabled={true} className="form-control" id="lblSYMBOL">{this.props.dataRow.ORGDATE}</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                            <h5><b>{this.props.strings.AVAILQTTY}</b></h5>
+                                        </div>
+                                        <div className="col-md-7">
+                                            <NumberFormat
+                                                thousandSeparator={true}
+                                                allowNegative={false}
+                                                disabled={true}
+                                                className="form-control"
+                                                decimalScale={0}
+                                                value={this.props.dataRow.AVAILQTTY}
+                                                id="txtFEEBUYER"
+                                                prefix={''}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                            <h5><b>{this.props.strings.PRICESELLBACK}</b></h5>
+                                        </div>
+                                        <div className="col-md-7">
+                                            <NumberFormat
+                                                thousandSeparator={true}
+                                                allowNegative={false}
+                                                disabled={true}
+                                                className="form-control"
+                                                decimalScale={0}
+                                                value={this.props.dataRow.PRICESELLBACK}
+                                                id="txtFEEBUYER"
+                                                prefix={''}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                            <h5><b>{this.props.strings.AMOUNT}</b></h5>
+                                        </div>
+                                        <div className="col-md-7">
+                                            <NumberFormat
+                                                thousandSeparator={true}
+                                                allowNegative={false}
+                                                disabled={true}
+                                                className="form-control"
+                                                decimalScale={0}
+                                                value={this.props.dataRow.AMOUNT}
+                                                id="txtFEEBUYER"
+                                                prefix={''}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                            <h5><b>{this.props.strings.FEE}</b></h5>
+                                        </div>
+                                        <div className="col-md-7">
+                                            <NumberFormat
+                                                thousandSeparator={true}
+                                                allowNegative={false}
+                                                disabled={true}
+                                                className="form-control"
+                                                decimalScale={0}
+                                                value={this.props.dataRow.FEE}
+                                                id="txtFEEBUYER"
+                                                prefix={''}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                            <h5><b>{this.props.strings.TAX}</b></h5>
+                                        </div>
+                                        <div className="col-md-7">
+                                            <NumberFormat
+                                                thousandSeparator={true}
+                                                allowNegative={false}
+                                                disabled={true}
+                                                className="form-control"
+                                                decimalScale={0}
+                                                value={this.props.dataRow.TAX}
+                                                id="txtFEEBUYER"
+                                                prefix={''}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                            <h5><b>{this.props.strings.TOTAL}</b></h5>
+                                        </div>
+                                        <div className="col-md-7">
+                                            <NumberFormat
+                                                thousandSeparator={true}
+                                                allowNegative={false}
+                                                disabled={true}
+                                                className="form-control"
+                                                decimalScale={0}
+                                                value={this.props.dataRow.TOTAL}
+                                                id="txtFEEBUYER"
+                                                prefix={''}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                            <h5><b>{this.props.strings.RATE}</b></h5>
+                                        </div>
+                                        <div className="col-md-7">
+                                            <NumberFormat
+                                                thousandSeparator={true}
+                                                allowNegative={false}
+                                                disabled={true}
+                                                className="form-control"
+                                                decimalScale={0}
+                                                value={this.props.dataRow.RATE}
+                                                id="txtFEEBUYER"
+                                                prefix={''}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-4">
+                                        </div>
+                                        <div className="col-md-7">
+                                            <input id="btncancel" onClick={this.submitGroup.bind(this)} type="button" className="btn btn-primary mgr10" value={this.props.strings.confirm} />
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* <div className="col-md-12">
+
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.symbol}</b></h5></div>
+                                        <div className="col-md-6"><h5>{this.props.dataRow.SYMBOL}</h5></div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.acbuyer}</b></h5></div>
+                                        <div className="col-md-6"><h5>{this.props.dataRow.ACBUYER}</h5></div>
+                                    </div>
+                                    <div className="col-md-12 row" style={{ display: !data.PRDTERM ? 'none' : '' }}>
+                                        <div className="col-md-6"><h5><b>{this.props.strings.prdterm}</b></h5></div>
+                                        <div className="col-md-6"><h5>{this.props.dataRow.PRDTERM}</h5></div>
+                                    </div>
+                                    <div className="col-md-12 row" style={{ display: !data.ORGDATE ? 'none' : '' }}>
+                                        <div className="col-md-6"><h5><b>{this.props.strings.orgdate}</b></h5></div>
+                                        <div className="col-md-6"><h5>{this.props.dataRow.ORGDATE}</h5></div>
+                                    </div>
+                                    <div className="col-md-12 row" >
+                                        <div className="col-md-6"><h5><b>{this.props.strings.method}</b></h5></div>
+                                        <div className="col-md-6">
+                                            <DropdownFactory
+                                                CDTYPE="AF"
+                                                CDNAME="FIX_METHOD"
+                                                CDVAL={this.state.METHOD}
+                                                onChange={this.onChangeMethod.bind(this)}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.QTTY}</b></h5></div>
+                                        <div className="col-md-6">
+                                            <NumberFormat
+                                                className='form-control'
+                                                value={this.props.dataRow.REMAIN}
+                                                disabled={true}
+                                                thousandSeparator={true}
+                                                decimalScale={0}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.qtty}</b></h5></div>
+                                        <div className="col-md-6">
+                                            <NumberFormat
+                                                className='form-control'
+                                                thousandSeparator={true}
+                                                fixedDecimalScale={true}
+                                                decimalScale={0}
+                                                id="txtEXECQTTY"
+                                                onValueChange={async value => {
+                                                    await this.setState({
+                                                        EXECQTTY: Number(value.value) > Number(this.props.dataRow.REMAIN) ? this.props.dataRow.REMAIN : value.value,
+                                                        defaulExec: null
+                                                    });
+                                                    if (this.state.METHOD == 'L') {
+                                                        await this.tinhGia(this.state.tradingRate, this.state.EXECQTTY)
+                                                    } else {
+                                                        await this.tinhLaiSuat(null, this.state.PRICE, this.state.EXECQTTY)
+                                                    }
+                                                    await this.getsellfee()
+                                                }}
+                                                value={this.state.EXECQTTY}
+                                            />
+                                        </div>
+
+                                    </div>
+
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.price}</b></h5></div>
+                                        <div className="col-md-6">
+                                            <NumberFormat
+                                                className='form-control'
+                                                thousandSeparator={true}
+                                                value={this.state.PRICE}
+                                                onChange={this.onChangepRICE.bind(this, "PRICE")}
+                                                disabled={this.state.METHOD == 'L'}
+                                                allowNegative={false}
+                                                id='price'
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.interestRate}</b></h5></div>
+                                        <div className="col-md-6">
+                                            <NumberFormat
+                                                className='form-control'
+                                                thousandSeparator={true}
+                                                value={this.state.tradingRate}
+                                                onChange={this.onChangeRate.bind(this, "tradingRate")}
+                                                disabled={this.state.METHOD == 'G'}
+                                                allowNegative={false}
+                                                id={'rate'}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.sellfee}</b></h5></div>
+                                        <div className="col-md-6">
+                                            <NumberFormat
+                                                className='form-control'
+                                                disabled={true}
+                                                thousandSeparator={true}
+                                                decimalScale={0}
+                                                value={this.state.SELLFEE || this.props.dataRow.SELLFEE}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.selltax}</b></h5></div>
+                                        <div className="col-md-6">
+                                            <NumberFormat
+                                                className='form-control'
+                                                disabled={true}
+                                                thousandSeparator={true}
+                                                decimalScale={0}
+                                                value={this.state.SELLTAX || this.props.dataRow.SELLTAX}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.sellcost}</b></h5></div>
+                                        <div className="col-md-6">
+                                            <NumberFormat
+                                                className='form-control'
+                                                disabled={true}
+                                                thousandSeparator={true}
+                                                value={Number(this.convertNumber(this.state.PRICE)) * Number(this.convertNumber(this.state.EXECQTTY)) - Number(this.convertNumber(this.state.SELLTAX)) - Number(this.convertNumber(this.state.SELLFEE))}
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.buyCost}</b></h5></div>
+                                        <div className="col-md-6">
+                                            <NumberFormat
+                                                className='form-control'
+                                                disabled={true}
+                                                thousandSeparator={true}
+                                                value={data.BUYCOST}
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.inputPrice}</b></h5></div>
+                                        <div className="col-md-6">
+                                            <NumberFormat
+                                                className='form-control'
+                                                disabled={true}
+                                                thousandSeparator={true}
+                                                value={Math.round(Number(this.props.dataRow.SETTAMTPER) * Number(this.convertNumber(this.state.EXECQTTY)))}
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.receivedCoupon}</b></h5></div>
+                                        <div className="col-md-6">
+                                            <NumberFormat
+                                                className='form-control'
+                                                disabled={true}
+                                                thousandSeparator={true}
+                                                decimalScale={0}
+                                                value={data.COUPON_SUM}
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.accruedcoupon}</b></h5></div>
+                                        <div className="col-md-6">
+                                            <NumberFormat
+                                                className='form-control'
+                                                disabled={true}
+                                                thousandSeparator={true}
+                                                decimalScale={0}
+                                                // value='0'
+                                                value={data.COUPON_NOW}
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.remaincoupon}</b></h5></div>
+                                        <div className="col-md-6">
+                                            <NumberFormat
+                                                className='form-control'
+                                                disabled={true}
+                                                thousandSeparator={true}
+                                                decimalScale={0}
+                                                value={data.COUNPON_REMAIN}
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.closeamt}</b></h5></div>
+                                        <div className="col-md-6">
+                                            <NumberFormat
+                                                className='form-control'
+                                                disabled={true}
+                                                thousandSeparator={true}
+                                                decimalScale={0}
+                                                value={data.PRODUCTSELLBACKDUE}
+
+                                            />
+                                        </div>
+                                    </div>
+                                   
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.public}</b></h5></div>
+                                        <div className="col-md-6">
+                                            <select className='form-control' name='publicAccount' defaultValue='Y' onChange={(e) => this.getOnChange(e)}>
+                                                <option value='Y'>{this.props.strings.yes}</option>
+                                                <option value='N'>{this.props.strings.no}</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.expdate}</b></h5></div>
+                                        <div className="col-md-6">
+                                            <DateInput
+                                                onChange={this.onChangeDate.bind(this)}
+                                                value={this.state.EXPDATE}
+                                                type="EXPDATE"
+                                                id="EXPDATE"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 row">
+                                        <div className="col-md-6"><h5><b>{this.props.strings.relative}</b></h5></div>
+                                        <div className="col-md-6">
+                                            <input type="text" className="form-control text-center" name="RELATED" onChange={(event) => this.getOnChange(event)} />
+                                        </div>
+                                    </div>
+                                </div>
+ */}
+
+
+
+                            </div>
+                        </form>
+                    </Modal.Body>
+
+                </Modal>
+            </div>
+        )
+    }
+}
+
+const stateToProps = state => ({
+    auth: state.auth,
+    tradingdate: state.systemdate.tradingdate,
+    language: state.language.language,
+});
+const decorators = flow([
+    connect(stateToProps),
+    translate('PopupTrade')
+]);
+module.exports = decorators(PopupTrade);
+
