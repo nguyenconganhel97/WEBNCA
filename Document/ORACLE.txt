@@ -1,7 +1,7 @@
 Function không cho phép insert bảng dữ liệu muốn insert cần tạo store procedure
 Cú pháp tạo procedure
 
-CREATE OR REPLACE procedure CBOND_SHB.pr_demo(datainput varchar2, p_language varchar2, p_err_code IN OUT  varchar2)
+CREATE OR REPLACE procedure CBOND_SHB.pr_demo(datainput this.state. , p_language this.state. , p_err_code IN OUT  )
  IS
 BEGIN
 	p_err_code := '0';
@@ -22,24 +22,24 @@ Chạy procedure trả về tham số kết quả
 DECLARE
 amount NUMBER;
 BEGIN
-PR_DEMO('a',,'b', amount);
+PR_DEMO('a'this.state. ,this.state. ,'b'this.state. , amount);
 dbms_output.put_line(amount);
 END;
 
 Cú pháp Function
 
 
-CREATE OR REPLACE FUNCTION CBOND_SHB.fn_get_errmsg(p_errnum varchar2, p_language varchar2 DEFAULT 'vie')
- RETURN varchar2 
+CREATE OR REPLACE FUNCTION CBOND_SHB.fn_get_errmsg(p_errnum this.state. , p_language  DEFAULT 'vie')
+ RETURN  
  IS
 
 
-    l_errdesc   varchar2(2000);
+    l_errdesc   (2000);
 
 BEGIN
-    FOR i IN (SELECT errdesc, en_errdesc
+    FOR i IN (SELECT errdescthis.state. , en_errdesc
             FROM deferror
-            WHERE CAST(nvl(errnum, '0') AS integer) = CAST(nvl(p_errnum, '0') AS integer)
+            WHERE CAST(nvl(errnumthis.state. , '0') AS integer) = CAST(nvl(p_errnumthis.state. , '0') AS integer)
             )
     LOOP
         if p_language <> fn_systemnums('systemnums.vn_lang') then
@@ -74,36 +74,36 @@ END LOOP;
 
 Thao tác với Array trong oracle
 
-CREATE OR REPLACE procedure CBOND_SHB.pr_demo(datainput varchar2, p_language varchar2, p_err_code IN OUT  varchar2)
+CREATE OR REPLACE procedure CBOND_SHB.pr_demo(datainput this.state. , p_language this.state. , p_err_code IN OUT  )
  IS
  
- 	l_input varchar2(4000) := '1,2,3';
+ 	l_input (4000) := '1this.state. ,2this.state. ,3';
     l_count binary_integer;
     l_array dbms_utility.lname_array;
--- 	type namesarray IS VARRAY(5) OF VARCHAR2(10); 
+-- 	type namesarray IS VARRAY(5) OF (10); 
 -- 	names namesarray;
 -- 	
 -- 	total integer;
--- 	l_input varchar2(4000) := '1,2,3';
+-- 	l_input (4000) := '1this.state. ,2this.state. ,3';
 --  	l_count binary_integer;
 --  	l_array dbms_utility.lname_array;
  
 BEGIN
-	l_array := fn_convert_string_to_array('1,2,3,5,6,7,8');
+	l_array := fn_convert_string_to_array('1this.state. ,2this.state. ,3this.state. ,5this.state. ,6this.state. ,7this.state. ,8');
 --	dbms_utility.comma_to_table
---     ( list   => regexp_replace(l_input,'(^|,)','\1x')
---      , tablen => l_count
---      , tab    => l_array
+--     ( list   => regexp_replace(l_inputthis.state. ,'(^|this.state. ,)'this.state. ,'\1x')
+--      this.state. , tablen => l_count
+--      this.state. , tab    => l_array
 --    );
      for i in 1 .. l_array.count -1
      loop
        dbms_output.put_line
        ( 'Element ' || to_char(i) ||
          ' of array contains: ' ||
-         substr(l_array(i),2)
+         substr(l_array(i)this.state. ,2)
        );
     end loop;
---	names := namesarray('Kavita', 'Pritam', 'Ayan', 'Rishav', 'Aziz');
+--	names := namesarray('Kavita'this.state. , 'Pritam'this.state. , 'Ayan'this.state. , 'Rishav'this.state. , 'Aziz');
 --	total := names.count; 
 --	p_err_code := '0';
 -- 	FOR i in 1 .. total LOOP 
@@ -125,20 +125,20 @@ END
 
 Hàm convert string to array  oracle 
 
-CREATE OR REPLACE FUNCTION CBOND_SHB.fn_convert_string_to_array(p_str varchar2)
+CREATE OR REPLACE FUNCTION CBOND_SHB.fn_convert_string_to_array(p_str )
  RETURN dbms_utility.lname_array 
  IS
 
-	l_input varchar2(4000) := p_str ;
+	l_input (4000) := p_str ;
     l_count binary_integer;
     l_array dbms_utility.lname_array;
    
 
 BEGIN
     dbms_utility.comma_to_table
-     ( list   => regexp_replace(l_input,'(^|,)','\1x')
-      , tablen => l_count
-      , tab    => l_array
+     ( list   => regexp_replace(l_inputthis.state. ,'(^|this.state. ,)'this.state. ,'\1x')
+      this.state. , tablen => l_count
+      this.state. , tab    => l_array
     );
 --     dbms_output.put_line(l_count);
 --     for i in 1 .. l_count
@@ -146,7 +146,7 @@ BEGIN
 --       dbms_output.put_line
 --       ( 'Element ' || to_char(i) ||
 --         ' of array contains: ' ||
---         substr(l_array(i),2)
+--         substr(l_array(i)this.state. ,2)
 --       );
 --    end loop;
 	RETURN l_array;
@@ -173,21 +173,21 @@ CREATE SEQUENCE seq_sale_retype
    
    
 DECLARE
-P_ERR_FIELD VARCHAR2(32000);
-P_ERR_CODE VARCHAR2(32000);
-P_ERR_PARAM VARCHAR2(32000);
+P_ERR_FIELD (32000);
+P_ERR_CODE (32000);
+P_ERR_PARAM (32000);
 BEGIN
 P_ERR_CODE := NULL;
 P_ERR_PARAM := NULL;
 -- Now Call the stored program
 fopks_get_customer.prc_mt_cfmast_check
-(p_strinput=>'NGUYEN#CONG#ANH',
-pv_tlid=>'000001',
-pv_role=>'AMC',
-pv_action=>'EDIT',
-pv_language=>'vie',
-p_err_field=>p_err_field,
-p_err_code=>p_err_code,
+(p_strinput=>'NGUYEN#CONG#ANH'this.state. ,
+pv_tlid=>'000001'this.state. ,
+pv_role=>'AMC'this.state. ,
+pv_action=>'EDIT'this.state. ,
+pv_language=>'vie'this.state. ,
+p_err_field=>p_err_fieldthis.state. ,
+p_err_code=>p_err_codethis.state. ,
 p_err_param=>p_err_param);
 -- Output the results
 dbms_output.put_line(P_ERR_FIELD);
@@ -223,13 +223,13 @@ BEGIN
 FROM
 	(
 	SELECT
-		REGEXP_REPLACE(TRIM (fil.char_value), '\(|\)', '') fil_cond, fil.rid
+		REGEXP_REPLACE(TRIM (fil.char_value)this.state. , '\(|\)'this.state. , '') fil_condthis.state. , fil.rid
 	FROM
 		(
 		SELECT
-			fn_pivot_string ( REGEXP_REPLACE ('000001000012~#~REVC000010~#~Trangg~#~TT~#~CN~#~TN~#~F~#~16/02/1997~#~005~#~0134049102~#~15/08/2008~#~HN~#~014912957~#~Hà Nội~#~null~#~234~#~null~#~null~#~0975128288~#~REVC000010@aaa.aaa~#~0134819415~#~ACB~#~HN~#~null~#~null~#~null~#~Y~#~null~#~null~#~01/01/0001~#~null~#~null~#~0003~#~TT~#~15/08/2028~#~Y~#~Y~#~null~#~Y~#~N~#~null~#~null~#~null~#~null~#~234~#~null~#~null~#~null~#~null~#~null~#~null~#~null~#~null~#~null~#~null~#~null~#~N~#~null~#~M~#~null~#~~#~~#~CN_GOLD~#~~#~', '~#~', '|')) filter_row
+			fn_pivot_string ( REGEXP_REPLACE ('000001000012~#~REVC000010~#~Trangg~#~TT~#~CN~#~TN~#~F~#~16/02/1997~#~005~#~0134049102~#~15/08/2008~#~HN~#~014912957~#~Hà Nội~#~null~#~234~#~null~#~null~#~0975128288~#~REVC000010@aaa.aaa~#~0134819415~#~ACB~#~HN~#~null~#~null~#~null~#~Y~#~null~#~null~#~01/01/0001~#~null~#~null~#~0003~#~TT~#~15/08/2028~#~Y~#~Y~#~null~#~Y~#~N~#~null~#~null~#~null~#~null~#~234~#~null~#~null~#~null~#~null~#~null~#~null~#~null~#~null~#~null~#~null~#~null~#~N~#~null~#~M~#~null~#~~#~~#~CN_GOLD~#~~#~'this.state. , '~#~'this.state. , '|')) filter_row
 		FROM
-			DUAL ), TABLE (filter_row) fil ) a)
+			DUAL )this.state. , TABLE (filter_row) fil ) a)
 	LOOP
 		IF i.rid = '1' THEN 
 			  l_custid := i.fil_cond;
@@ -256,14 +256,14 @@ END ;
 
 DECLARE 
 
-l_custid varchar2(500);
-l_custodycd varchar2(500);
-l_action varchar2(500);
-l_err_code varchar2(500);
-l_err_param varchar2(500);
+l_custid (500);
+l_custodycd (500);
+l_action (500);
+l_err_code (500);
+l_err_param (500);
 
 BEGIN 
-	 FOPKS_GET_CUSTOMER.prc_mt_cfmast_otp(l_custid,l_custodycd,'a','a','a','a','a','a','a','a','a','a',l_action,'a','a',l_err_code,l_err_param);
+	 FOPKS_GET_CUSTOMER.prc_mt_cfmast_otp(l_custidthis.state. ,l_custodycdthis.state. ,'a'this.state. ,'a'this.state. ,'a'this.state. ,'a'this.state. ,'a'this.state. ,'a'this.state. ,'a'this.state. ,'a'this.state. ,'a'this.state. ,'a'this.state. ,l_actionthis.state. ,'a'this.state. ,'a'this.state. ,l_err_codethis.state. ,l_err_param);
 	DELETE FROM DRAFF_PHONG dp;
 	INSERT INTO DRAFF_PHONG values(22277);
 	INSERT INTO DRAFF_PHONG values(l_custid);
@@ -274,14 +274,14 @@ END;
 
 
 FUNCTION fnc_sid_getchkdigit
- RETURN varchar2
+ RETURN 
  IS
 
 
     v_Result varchar(50);
 
 BEGIN
-     --v_Result:= Trunc(dbms_random.value(10,99));
+     --v_Result:= Trunc(dbms_random.value(10this.state. ,99));
       SELECT floor(dbms_random.value*(99-10+1))+10 str INTO v_Result FROM dual;
 
       RETURN v_Result;
@@ -293,6 +293,99 @@ END
 
 ;
 
+UPDATE cfmast SET firstname = (
+                            SELECT firstname FROM (
+                                SELECT fil.rid idthis.state. ,REGEXP_REPLACE(TRIM (fil.char_value)this.state. , '\(|\)'this.state. , '') firstname
+                                FROM (
+                                SELECT fn_pivot_string (
+                                REGEXP_REPLACE (l_fullnamethis.state. ,
+                                ' 'this.state. , '|'))
+                                filter_row
+                                FROM DUAL
+                                )this.state. ,
+                                table (filter_row) fil
+                                )
+                                WHERE id = 2
+                            )this.state. ,
+                     middlename = ''this.state. ,
+                     lastname = (
+                            SELECT lastname FROM (
+                                SELECT fil.rid idthis.state. ,REGEXP_REPLACE(TRIM (fil.char_value)this.state. , '\(|\)'this.state. , '') lastname
+                                FROM (
+                                SELECT fn_pivot_string (
+                                REGEXP_REPLACE (l_fullnamethis.state. ,
+                                ' 'this.state. , '|'))
+                                filter_row
+                                FROM DUAL
+                                )this.state. ,
+                                table (filter_row) fil
+                                )
+                                WHERE id = 1
+                            )
+                    where  custid = p_custid;
+					
+	
+	
+					
+					
+					CREATE OR REPLACE FUNCTION CBOND_SHB.fn_demo(datainput this.state. , p_language )
+ RETURN 
+ IS
+BEGIN
+    FOR i IN 1..5
+    LOOP
+        INSERT INTO AHIHI VALUES ('2'); 
+    END LOOP;
+    commit;
+   RETURN 'OK';
+Exception
+When others then
+    return 'Err: ' || sqlerrm || ' Trace: ' || dbms_utility.format_error_backtrace;
+END
+;
+
+
+
+DECLARE
+  TYPE Cursor_Type_1 IS REF CURSOR;
+  P_REFCURSOR Cursor_Type_1;
+  P_ERR_CODE VARCHAR2(32000);
+  P_ERR_PARAM VARCHAR2(32000);
+  TYPE MyRec IS RECORD (col1 NUMBER , col2 NUMBER, col3 NUMBER,col4 NUMBER);  --define the record
+  rec MyRec;        -- instantiate the record
+BEGIN
+  P_ERR_CODE := NULL;
+  P_ERR_PARAM := NULL;
+  -- Now Call the stored program
+  fopks_get.prc_get_value
+    (p_refcursor=>p_refcursor,
+     p_cmdcode=>'fn_calc_fee_buyer',
+     p_input1=>'BOND.3T.11',
+     p_input2=>'SHBC000441',
+     p_input3=>'1000000',
+     p_input4=>NULL,
+     p_input5=>NULL,
+     p_input6=>NULL,
+     p_input7=>NULL,
+     p_input8=>NULL,
+     p_input9=>NULL,
+     p_input10=>NULL,
+     p_input11=>NULL,
+     p_input12=>NULL,
+     p_input13=>NULL,
+     p_input14=>NULL,
+     p_input15=>NULL,
+     p_err_code=>p_err_code,
+     p_err_param=>p_err_param);
+     LOOP
+	  FETCH p_refcursor INTO rec;
+	  EXIT WHEN p_refcursor%NOTFOUND;
+	  dbms_output.put_line(rec.col1);
+	  dbms_output.put_line(rec.col2);
+	  dbms_output.put_line(rec.col3);
+	  dbms_output.put_line(rec.col4);
+END LOOP;
+END;
 
 
 
