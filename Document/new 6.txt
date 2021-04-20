@@ -14,6 +14,9 @@ when others then
 end prc_get_accounts_toclose111; 
 
 
+/usr/local/bin/redis-cli
+cd /usr/local/pgsql-10/bin/
+
 txpks_notify
 pgctx
 
@@ -51,12 +54,42 @@ When others then
     return '-1';
 END;
 
- l_txmsg.txfields('02').defname := 'CUSTID';
+   l_txmsg.txfields('02').defname := 'CUSTID';
       l_txmsg.txfields('02').TYPE := 'C';
       l_txmsg.txfields('02').VALUE := p_CUSTID;
 
+this.props.auth.user.USERID
 
  prc_insertemaillog(l_Email,'106E', l_data_source, p_CUSTODYCD, l_currdate, l_orgpasswrd);
  
  select proname,prosrc from pg_proc where prosrc like '%%';
+ 
+ 
+ if l_count > 0 then
+            p_err_code:= '-120015';
+          p_err_param := fn_get_errmsg(p_err_code,pv_language);
+          return;
+            end if;
+			
+			
+p_txmsg.txfields(c_custodycd).value			
 	
+	
+ c_custodycd        CONSTANT CHAR(2) := '01';
+   c_oldcftype        CONSTANT CHAR(2) := '04';
+   c_cftype           CONSTANT CHAR(2) := '02';	
+   
+   
+   l_rp_date
+   
+   
+   p_coabr 17
+   
+   
+SELECT A.CDVAL VALUECD, A.CDVAL value, A.CDCONTENT DISPLAY, A.EN_CDCONTENT EN_DISPLAY FROM ALLCODE A WHERE CDNAME LIKE 'YESNO' AND CDTYPE = 'SA'   
+
+
+ delete from draff_phong;
+    insert into draff_phong values('BR: '||p_txmsg.txfields(c_coabr).value);
+
+   

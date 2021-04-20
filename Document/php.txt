@@ -1,0 +1,51 @@
+- redis : Database memory
+- Chạy php : php artisan serve
+- Gen key trong ENV : php artisan key:generate
+- App_evn : Môi trường chạy -- local -- test -- live
+- php artisan tin : Giống như đang chạy code trên hệ thống
+- Middleware : 1 tầng check lọc trước khi vào controller
+- Node js : npm i 
+- php : composer install
+===>ROUTER
+Router::get('news/{id}/catgory/{category}',function($id,$category){
+return $id;
+})->name('user.show')->where('id',['0-9']);
+
+href = '{{route('user.show',['id'=>'a','name' => '3'])}}'
+
+where cho tất cả router
+-->vào RouterSerive :
+boot ==> 
+Route::pattern('id','[0-9]');
+- Group router
+ Sử dụng trong phân quyền nhóm người dùng
+ Mỗi nhóm người dùng truy suất khác nhau
+ Vd : get('backend/api1')
+	: get('backend/api2')
+- Prefix : đầu tiền tố api giống nhau	
+Route::group('prefix'=>'backend');
+VD 
+ Route::group(['prefix'=>'backend'],function(){
+	Route::get('api1',function(){
+		return ();
+	});
+ }
+ );
+ 
+ Route::prefix('backend')->group(function(){
+ 
+ })
+ 
+==> Router namespace
+ Demo thì dùng router function callback còn thực tế thì không dùng
+- Tạo controller
+php artisan make:controller Backend/UserController
+- Cú pháp API 
+Route::get($uri,$callback);
+ 
+ 
+ 
+ 
+ 
+ 
+ 

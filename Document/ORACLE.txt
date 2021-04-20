@@ -387,5 +387,19 @@ BEGIN
 END LOOP;
 END;
 
+SELECT ph.SYMBOL,pa.TXDATE,ph.INTRATE FROM PAYMENT_HIST ph JOIN (
+SELECT s.SYMBOL ,s.TXDATE ,MIN(p.REPORTDT ) rptdate 
+FROM SEREQCLOSE s
+	JOIN PAYMENT_HIST p
+		ON s.SYMBOL = p.SYMBOL AND p.REPORTDT >= s.TXDATE AND p.PAYTYPE ='INT'
+GROUP BY s.SYMBOL ,s.TXDATE
+)pa
+ON ph.SYMBOL = pa.SYMBOL AND ph.REPORTDT = pa.rptdate AND ph.PAYTYPE ='INT'
 
 
+CASE WHEN getcurrdate() - ADD_MONTHS(OPNDATE, limittime * 12) <= 0
+                   THEN
+                    (numberinvestor - l_count)
+                   ELSE null
+                   end
+                   cus_rm
