@@ -42,9 +42,46 @@ VD
 php artisan make:controller Backend/UserController
 - Cú pháp API 
 Route::get($uri,$callback);
+- Xem tất cả danh sách route đang có 
+- Route Resource va Resource Controller
+- Trong 1 controller
+ index : hiển thị danh sách
+ create : màn hình tạo khi load
+ store : nhận req khi submit form lên
+ edit : màn hình hiển thị sửa
+ update : submit form từ sửa
+ show : xem chi tieets
  
  
  
+ 
+ 
+Front-End : React JS --- axios, data : JSON --> API (Server)
+-->Server : Node JS --> procedure (DB)
+NPM ~ Composer
+-->Framework : Sails.js ~ Laravel
+DB : PostgreSQL/Oracle --> Insert,update,send email,send sms ...
+
+
+Simple example function of account activation is closed
++) GET data
+
+https://192.168.1.243/account/getListUserClose
+
+account ~~ AccountController
+getListUserClose
+
+"funckey": "prc_patriotx_get_list_close" -- name procedure get data 
+
++) Process
+ 
+https://192.168.1.243/account/KichHoatTk
+
+account ~~ AccountController 
+
+KichHoatTk
+
+"funckey": "prc_txprocess_2026",  -- name procedure process data 
  
  
  

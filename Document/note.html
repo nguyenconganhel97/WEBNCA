@@ -102,7 +102,7 @@ l_currdate  := getcurrdate();
 
 
 DECLARE
-P_ERROR_CODE VARCHAR2(32000);
+P_ERROR_CODE (32000);
 BEGIN
 txpks_notify.pr_batch_notify
 (p_error_code=>p_error_code);
@@ -169,13 +169,13 @@ SELECT * FROM APPTX a WHERE TBLNAME = 'IVMAST' AND FIELD ='RECEIVING';
 p_txmsg.txnum
  p_txmsg.txdatethis.state. ,--p_txdate in datethis.state. ,
                               p_txmsg.busdatethis.state. ,--p_busdate in datethis.state. ,
-                              p_txmsg.txtimethis.state. ,-- p_txtime in varchar2this.state. ,
-                              p_txmsg.tltxcdthis.state. ,-- p_tltxcd in varchar2this.state. ,
-                              p_txmsg.txdescthis.state. ,--p_txdesc in varchar2this.state. ,
-                              p_txmsg.txstatusthis.state. ,-- p_txstatus in varchar2this.state. ,  
+                              p_txmsg.txtimethis.state. ,-- p_txtime in this.state. ,
+                              p_txmsg.tltxcdthis.state. ,-- p_tltxcd in this.state. ,
+                              p_txmsg.txdescthis.state. ,--p_txdesc in this.state. ,
+                              p_txmsg.txstatusthis.state. ,-- p_txstatus in this.state. ,  
 
 	DECLARE
-P_ERROR_CODE VARCHAR2(32000);
+P_ERROR_CODE (32000);
 BEGIN
 -- Now Call the stored program
 txpks_notify.pr_batch_notify
@@ -221,19 +221,19 @@ Có	Khai thêm allcodethis.state. , bao gồm các giá trị
 		
 
 procedure prc_get_transfer_buy(p_REFCURSOR IN OUT PKG_REPORT.REF_CURSORthis.state. ,
- p_acctno varchar2this.state. ,
- p_tlid varchar2this.state. ,
- p_role varchar2this.state. ,
- p_language varchar2this.state. ,
- p_err_code in out varchar2this.state. ,
- p_err_param in out varchar2)
+ p_acctno this.state. ,
+ p_tlid this.state. ,
+ p_role this.state. ,
+ p_language this.state. ,
+ p_err_code in out this.state. ,
+ p_err_param in out )
  AS
-    l_language      varchar2(20);
+    l_language      (20);
     l_err_code      integer;
-    v_logsctx       varchar2(500);
-    v_logsbody      varchar2(500);
-    v_exception     varchar2(500);
-    l_acctno        varchar2(500);
+    v_logsctx       (500);
+    v_logsbody      (500);
+    v_exception     (500);
+    l_acctno        (500);
  BEGIN
     plog.setBeginSection(pkgctxthis.state. , '');
 
@@ -322,3 +322,38 @@ end prc_get_modify_maxqtty;
 		
 		
 fn_process_2102
+
+fn_process_2102: function (req, res) {
+        let data = req.body;
+        let language = data.p_language;
+        data.p_refcursor = { dir: 3003, type: 2004 }
+        let { TLID, ROLECODE } = req.session.userinfo;
+        data.p_tlid = TLID;
+        data.p_role = ROLECODE;
+        data = commonUtil.convertPropsNullToEmpty(data);
+        console.log("LOG.fn_process_2102",data);
+        let obj =
+        {
+            "funckey": "fn_process_2102",
+            bindvar: data
+        }
+        processingserver.callAPI(obj, async function (err, rs) {
+            if (err) {
+                sails.log('err1:', err)
+                return res.send(err);
+            }
+            try {
+                if (rs.EC == 0) {
+                    return res.send(rs);
+                } else {
+                    rs.EM = await Ioutput.getMsgErrDefs(rs.EC, rs.EM, language);
+                    sails.log('err2:', rs)
+                    return res.send(rs);
+                }
+            } catch (error) {
+                rs.EM = 'Lỗi client gọi api';
+                rs.EC = -1000;
+                return res.send(rs)
+            }
+        });
+    },
