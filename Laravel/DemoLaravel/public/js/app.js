@@ -1856,10 +1856,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      message: "Xin Chaoooo!",
+      message: "Xin Chaoooo HIHI!",
       student: {
         name: "NCA",
         age: 23
@@ -1875,6 +1876,11 @@ __webpack_require__.r(__webpack_exports__);
     },
     name_student: function name_student() {
       return "Xin chao ban: " + this.student.name;
+    }
+  },
+  computed: {
+    tinhnamsinh: function tinhnamsinh() {
+      return 2021 - this.student.age;
     }
   }
 });
@@ -37569,7 +37575,13 @@ var render = function() {
       },
       [_vm._v("Click type 1")]
     ),
-    _vm._v("\n  " + _vm._s(_vm.name_student()) + "\n\n")
+    _vm._v(
+      "\n  " +
+        _vm._s(_vm.name_student()) +
+        "\n  Name sinh : " +
+        _vm._s(_vm.tinhnamsinh) +
+        "\n\n"
+    )
   ])
 }
 var staticRenderFns = []

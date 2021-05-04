@@ -6,6 +6,7 @@
     <button v-on:click = "click()">Click type 1</button>
     <button v-on:click = "click_name(student.name)">Click type 1</button>
     {{name_student()}}
+    Name sinh : {{tinhnamsinh}}
 
   </div>
 </template>
@@ -13,7 +14,7 @@
 export default {
   data() {
     return {
-      message: "Xin Chaoooo!",
+      message: "Xin Chaoooo HIHI!",
       student : {
           name : "NCA",
           age : 23
@@ -30,8 +31,11 @@ export default {
       name_student(){
           return "Xin chao ban: "+this.student.name;
       }
-
-
+  },
+  computed : {
+    tinhnamsinh(){
+      return (2021 - this.student.age)
+    }
   }
 };
 </script>
